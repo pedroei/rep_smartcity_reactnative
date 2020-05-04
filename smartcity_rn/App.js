@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Login from './pages/Login';
 import Lista from './pages/Lista';
+import AddNota from './pages/AddNota';
 
 const Stack = createStackNavigator();
 
@@ -22,6 +23,10 @@ function App() {
         <Stack.Screen
           name="Lista"
           component={Lista}
+        />
+        <Stack.Screen
+          name="AddNota"
+          component={AddNota}
         />
       </Stack.Navigator>
     </NavigationContainer>
