@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import Login from './pages/Login';
+import Lista from './pages/Lista';
 
 const Stack = createStackNavigator();
 
@@ -17,6 +18,10 @@ function App() {
           name="Login"
           component={Login}
           options={{ title: 'SafeCity' }}
+        />
+        <Stack.Screen
+          name="Lista"
+          component={Lista}
         />
       </Stack.Navigator>
     </NavigationContainer>
