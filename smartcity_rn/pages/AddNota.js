@@ -22,16 +22,20 @@ class AddNota extends Component{
 
   }
     addRegisto=()=>{
-    realm.write(() => {
-        var ID = realm.objects('nota').length + 1;
-        realm.create('nota', {
-            id: ID,
-            titulo: this.state.titulo,
-            descricao: this.state.descricao,
-            local: this.state.local,
-            });
-        });
-        Alert.alert("Registo inserido com sucesso.")
+      if (this.state.titulo.trim() === "" || this.state.descricao.trim() === "" || this.state.local.trim() === "") {
+        Alert.alert("Preencha todo so campos!")
+      } else {
+        realm.write(() => {
+          var ID = realm.objects('nota').length + 1;
+          realm.create('nota', {
+              id: ID,
+              titulo: this.state.titulo,
+              descricao: this.state.descricao,
+              local: this.state.local,
+              });
+          });
+          Alert.alert("Registo inserido!")
+      }
     }
 
       back = () =>
