@@ -2,6 +2,7 @@
 import React, { Component, useState} from 'react';
 import { StyleSheet, View, Text, Image, Button, TextInput} from 'react-native';
 
+import {StackActions} from '@react-navigation/native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 function Login({navigation}) {
@@ -33,24 +34,19 @@ function Login({navigation}) {
         />
         <View style={styles.buttonview}>
           <Button
-            onPress={() => {
-                alert('Email: ' + email + '\nPassword: ' + password);
-            }}
+            onPress={() => 
+              navigation.dispatch(StackActions.replace('Mapa')) }
             color="#780647"
-            title="Ver Dados"
+            title="Login"
           />
         </View>
-
-        <Text style={styles.textinput2}>
-        {'Email: ' + email + '\nPassword: ' + password}
-        </Text>
         
       </View>
       <View style={styles.part3}>
           <Button
             color="#780623"
             title="Notas Pessoais"
-            onPress={() => navigation.navigate('Lista', {numero: '123'}) }
+            onPress={() => navigation.navigate('StackLista') }
           />
       </View>
     </View>

@@ -36,18 +36,14 @@ class Lista extends Component{
 
         ListViewItemSeparator = () => {
             return (
-            <View style={{ height: 0.5, width: '100%', backgroundColor: '#000' }} />
+            <View style={{ height: 1, width: '100%', backgroundColor: '#000' }} />
             );
         };
 
     }
 
-      GoToAddNota = () =>
-    {
-       this.props.navigation.navigate('AddNota');
-
-    }
-
+      GoToAddNota = () => {
+       this.props.navigation.navigate('AddNota'); }
 
     render() {
         return(
@@ -66,6 +62,7 @@ class Lista extends Component{
                  )}
             />
             <Button
+                style = {styles.btnAdd}
                 color="#780623"
                 title="Adicionar Nota"
                 onPress={this.GoToAddNota} 
@@ -81,7 +78,6 @@ const styles = StyleSheet.create({
      flex:1,
      justifyContent: 'center',
      paddingTop: (Platform.OS) === 'ios' ? 20 : 0,
-     margin: 10
   },
   TextInputStyle:
    {
@@ -93,13 +89,11 @@ const styles = StyleSheet.create({
      marginBottom: 10,
      textAlign: 'center',
    },
-   button: {
-     width: '100%',
-     height: 40,
-     padding: 10,
-     backgroundColor: '#4CAF50',
-     borderRadius:7,
-     marginTop: 12
+   btnAdd: {
+       height: 400,
+       padding: 10,
+       borderRadius:7,
+       margin: 12
    },
    TextStyle:{
      color:'#fff',
