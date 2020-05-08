@@ -1,109 +1,144 @@
 
 import React, { Component, useState} from 'react';
-import { StyleSheet, View, Text, Image, Button, TextInput} from 'react-native';
+import { StyleSheet, View, Text, Image, Button, TextInput, ImageBackground, Dimensions, TouchableOpacity} from 'react-native';
 
 import {StackActions} from '@react-navigation/native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
+
+import bg from './../images/backgound.jpg';
+import logo from './../images/city.png';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
+const { width: WIDTH } = Dimensions.get('window');
 
 function Login({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   return(
-    <View style={styles.full}>
-      <View style={styles.part1}>
-      <Image
-          style={styles.image}
-          source={require('../images/react.png')}
-        />
+    <ImageBackground source={bg} style={styles.backgroundContainer}>
+      <View style={styles.logoContainer}>
+        <Image source={logo} style={styles.logo}/>
+        <Text style={styles.logoText}>SmartCity</Text>
       </View>
-      <View style={styles.part2}>
-        <TextInput
-          style={styles.textinput}
-          placeholder="Email"
-          placeholderTextColor="white"
-          onChangeText={text => setEmail(text)}
-          defaultValue={email}
-        />
-        <TextInput
-          style={styles.textinput}
-          placeholder="Password"
-          placeholderTextColor="white"
-          onChangeText={text => setPassword(text)}
-          defaultValue={password}
-        />
-        <View style={styles.buttonview}>
-          <Button
-            onPress={() => 
-              navigation.dispatch(StackActions.replace('Mapa')) }
-            color="#780647"
-            title="Login"
-          />
-        </View>
+
+      <View style={styles.inputContainer}>
+   
         
+        <TextInput 
+          style={styles.input}
+          placeholder={'Email'}
+          placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
+          underlineColorAndroid='transparent'
+          onChangeText={text => setEmail(text)}
+        />
       </View>
-      <View style={styles.part3}>
-          <Button
-            color="#780623"
-            title="Notas Pessoais"
-            onPress={() => navigation.navigate('StackLista') }
-          />
+
+      <View style={styles.inputContainer}>
+        <TextInput 
+          style={styles.input}
+          placeholder={'Password'}
+          secureTextEntry={true}
+          placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
+          underlineColorAndroid='transparent'
+          onChangeText={text => setPassword(text)}
+        />
       </View>
-    </View>
+
+      <TouchableOpacity 
+        style={styles.btnLogin}
+        onPress={() => navigation.dispatch(StackActions.replace('Mapa'))}>
+        <Text style={styles.text}>Login</Text>
+      </TouchableOpacity>
+
+      <Text style={styles.textRegistar}>Registar</Text>
+
+      <TouchableOpacity 
+        style={styles.btnNotas}
+        onPress={() => navigation.navigate('StackLista') }>
+        <Text style={styles.text}>Notas pessoais</Text>
+      </TouchableOpacity>
+
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-    full: {
-      flex: 1,
-      flexDirection: 'column',
-      backgroundColor: '#222222'
+    backgroundContainer: {
+        flex: 1,
+        width: null,
+        height: null,
+        //justifyContent: 'center',
+        alignItems: 'center'
     },
-    part1: {
-      flex: 1,
-  //    backgroundColor: 'red',
-      justifyContent: 'center',
+    logoContainer: {
       alignItems: 'center',
-      
+      marginTop: 35,
+      marginBottom: 50
     },
-    part2: {
-      flex: 2,
-      
-    //  backgroundColor: 'blue',
+    logo: {
+      width: 120,
+      height: 120
     },
-    part3: {
-      flex: 1,
-    //  backgroundColor: 'red',
-      justifyContent: 'flex-end',
-      margin: 10,
-    },
-    buttonview: {
-      flex: 1,
-      margin: 10,
-    },
-    text: {
+    logoText: {
       color: 'white',
       fontSize: 25,
+      fontWeight: '500',
+      marginTop: 10,
+      opacity: 0.5
     },
-    textinput: {
-      height: 40,
-      borderColor: 'gray',
-      borderWidth: 1,
-      margin: 10,
-      color: 'white',
-      
+    inputContainer: {
+      marginTop: 10,
     },
-    textinput2: {
-      height: 40,
-      margin: 10,
-      color: 'white',
+    input: {
+      width: WIDTH-55,
+      height: 45,
+      borderRadius: 25,
+      fontSize: 16,
+      //paddingLeft: 45,
+      paddingLeft: 20,
+      backgroundColor: 'rgba(0, 0, 0, 0.35)',
+      color: 'rgba(255, 255, 255, 0.7)',
+      marginHorizontal: 25
     },
-    image: {
-      flex: 1,
+    inputIcon: {
+      position: 'absolute',
+      top: 10,
+      left: 37
+    },
+    btnEye: {
+      position: 'absolute',
+      top: 8,
+      right: 37
+    },
+    btnLogin: {
+      width: WIDTH-55,
+      height: 45,
+      borderRadius: 25,
+      backgroundColor: 'rgba(72,61,139, 0.8)',
+      justifyContent: 'center',
+      marginTop: 20
+    },
+    btnNotas: {
       width: 150,
-      height: 150,
-      
-  },
+      height: 45,
+      borderRadius: 25,
+      backgroundColor: 'rgba(72,61,139, 0.8)',
+      justifyContent: 'center',
+      marginTop: 50
+    },
+    text: {
+      color: 'rgba(255, 255, 255, 0.7)',
+      fontSize: 16,
+      textAlign: 'center'
+    },
+    textRegistar: {
+      color: 'white',
+      fontSize: 15,
+      fontWeight: '500',
+      marginTop: 5,
+      opacity: 0.65
+    },
 });
 
 export default Login;
