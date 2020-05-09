@@ -17,7 +17,8 @@ class AddNota extends Component{
     this.state = {
         titulo: '',
         descricao: '',
-        local: ''
+        local: '',
+        data: '',
     };
 
   }
@@ -26,12 +27,27 @@ class AddNota extends Component{
         Alert.alert("Preencha todo so campos!")
       } else {
         realm.write(() => {
-          var ID = realm.objects('nota').length + 1;
+          //var ID = realm.objects('nota').length + 1;
+          const lastRecord = realm.objects('nota').sorted('id', true)[0];
+          const highestId = lastRecord == null?0:lastRecord.id;
+          const newID = highestId == null?1:highestId+1;
+          
+          var day = new Date().getDate(); //Current Date
+          var month = new Date().getMonth() + 1; //Current Month
+          var year = new Date().getFullYear(); //Current Year
+          var hours = new Date().getHours(); //Current Hours
+          var min = new Date().getMinutes(); //Current Minutes
+          var sec = new Date().getSeconds(); //Current Seconds
+        
+          var date = day + '/' + month + '/' + year;
+          //var time =  hours + ':' + min + ':' + sec;
+
           realm.create('nota', {
-              id: ID,
+              id: newID,
               titulo: this.state.titulo,
               descricao: this.state.descricao,
               local: this.state.local,
+              data: date,
               });
           });
           Alert.alert("Registo inserido!")

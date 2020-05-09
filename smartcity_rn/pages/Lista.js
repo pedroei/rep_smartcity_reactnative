@@ -25,10 +25,11 @@ class Lista extends Component{
                     titulo: 'string',
                     descricao: 'string',
                     local: 'string',
+                    data: 'string'
                 }
             }]
         });
-
+        
         var notas = realm.objects('nota');
         this.state = {
             FlatListItems: notas,
@@ -46,6 +47,7 @@ class Lista extends Component{
        this.props.navigation.navigate('AddNota'); }
 
     render() {
+        
         return(
           <View style = { styles.MainContainer }>
           <FlatList
@@ -58,6 +60,7 @@ class Lista extends Component{
                         <Text>Titulo: {item.titulo}</Text>
                         <Text>Descrição: {item.descricao}</Text>
                         <Text>Local: {item.local}</Text>
+                        <Text>Data: {item.data}</Text>
                     </View>
                  )}
             />
