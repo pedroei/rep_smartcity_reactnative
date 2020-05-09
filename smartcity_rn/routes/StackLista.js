@@ -20,6 +20,7 @@ function StackLista({navigation}) {
         <Stack.Screen
           name="AddNota"
           component={AddNota}
+          options={{ title: 'Adicionar Nota' }}
         />
       </Stack.Navigator>
   );

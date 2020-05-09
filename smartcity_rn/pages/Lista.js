@@ -43,8 +43,12 @@ class Lista extends Component{
 
     }
 
-      GoToAddNota = () => {
-       this.props.navigation.navigate('AddNota'); }
+    GoToAddNota = () => {
+       this.props.navigation.navigate('AddNota'); 
+    }
+    GoBack = () => {
+       this.props.navigation.navigate('Login'); 
+    }
 
     render() {
         
@@ -55,21 +59,29 @@ class Lista extends Component{
                 ItemSeparatorComponent={this.ListViewItemSeparator}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
-                    <View style={{ backgroundColor: 'white', padding: 20 }}>
-                        <Text>Id: {item.id}</Text>
-                        <Text>Titulo: {item.titulo}</Text>
-                        <Text>Descrição: {item.descricao}</Text>
-                        <Text>Local: {item.local}</Text>
-                        <Text>Data: {item.data}</Text>
+                    <View style={{ backgroundColor: 'white', padding: 23}}>
+                        {/*<Text>Id: {item.id}</Text>*/}
+                        <Text 
+                        style={{ fontSize: 20, fontWeight: 'bold' }}>
+                         {item.titulo} </Text>
+                        <Text style={{ fontSize: 15}}>{item.local}</Text>
+                        <Text style={{ marginTop: 5 }}>{item.descricao}</Text>
+                        <Text style={{ textAlign: 'right' }}>{item.data}</Text>
                     </View>
                  )}
             />
-            <Button
-                style = {styles.btnAdd}
-                color="#780623"
-                title="Adicionar Nota"
-                onPress={this.GoToAddNota} 
-             />
+            <View style = { styles.containerBtns }>
+                <TouchableOpacity
+                    style = {styles.btn}
+                    onPress={ this.GoBack}>
+                    <Text style={styles.text}> Voltar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style = {styles.btn}
+                    onPress={this.GoToAddNota}>
+                    <Text style={styles.text}> Adicionar Nota</Text>
+                </TouchableOpacity>
+            </View>
             </View>
         );
 
@@ -77,32 +89,28 @@ class Lista extends Component{
 }
 
 const styles = StyleSheet.create({
-  MainContainer :{
+    MainContainer :{
      flex:1,
      justifyContent: 'center',
      paddingTop: (Platform.OS) === 'ios' ? 20 : 0,
-  },
-  TextInputStyle:
-   {
-     borderWidth: 1,
-     borderColor: '#009688',
-     width: '100%',
-     height: 40,
-     borderRadius: 10,
-     marginBottom: 10,
-     textAlign: 'center',
-   },
-   btnAdd: {
-       height: 400,
+     backgroundColor: 'white'
+    },
+    containerBtns: {
+       flexDirection: 'row',
+    },
+    btn: {
+       width: 150,
        padding: 10,
-       borderRadius:7,
-       margin: 12
-   },
-   TextStyle:{
-     color:'#fff',
-     textAlign:'center',
-   },
-   textViewContainer: {
+       borderRadius:25,
+       margin: 12,
+       backgroundColor: 'rgba(72,61,139, 0.8)',
+    },
+    text: {
+      color: 'white',
+      fontSize: 16,
+      textAlign: 'center'
+    },
+    textViewContainer: {
      textAlignVertical:'center',
      padding:10,
      fontSize: 20,

@@ -64,30 +64,32 @@ class AddNota extends Component{
     return (
      <View style={styles.MainContainer}>
        <TextInput
-             placeholder="Inserir titulo"
-             style = { styles.TextInputStyle }
+             placeholder="Titulo"
+             style = { styles.TextInputStyleTitulo }
              underlineColorAndroid = "transparent"
              onChangeText = { ( text ) => { this.setState({ titulo: text })} }
        />
        <TextInput
-             placeholder="Inserir descricao"
-             style = { styles.TextInputStyle }
-             underlineColorAndroid = "transparent"
-             onChangeText = { ( text ) => { this.setState({ descricao: text })} }
-       />
-       <TextInput
-             placeholder="Inserir local"
-             style = { styles.TextInputStyle }
+             placeholder="Local"
+             style = { styles.TextInputStyleLocal }
              underlineColorAndroid = "transparent"
              onChangeText = { ( text ) => { this.setState({ local: text })} }
        />
-       <TouchableOpacity onPress={this.addRegisto} activeOpacity={0.7} style={styles.button} >
-          <Text style={styles.TextStyle}> Adicionar </Text>
-        </TouchableOpacity>
-
+       <TextInput
+             placeholder="Descricao"
+             style = { styles.TextInputStyleDesc }
+             multiline={true}
+             underlineColorAndroid = "transparent"
+             onChangeText = { ( text ) => { this.setState({ descricao: text })} }
+       />
+       <View style = { styles.containerBtns }>
         <TouchableOpacity onPress={this.back}  activeOpacity={0.7} style={styles.button} >
-          <Text style={styles.TextStyle}> Voltar </Text>
+            <Text style={styles.text}> Voltar </Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={this.addRegisto} activeOpacity={0.7} style={styles.button} >
+            <Text style={styles.text}> Adicionar </Text>
+          </TouchableOpacity>
+        </View>
 
      </View>
     );
@@ -95,28 +97,57 @@ class AddNota extends Component{
 
 }
 
-
  const styles = StyleSheet.create({
-   MainContainer: {
+    MainContainer: {
      flex: 1,
-   },
-   button: {
-       height: 40,
+     backgroundColor: '#fff',
+    },
+    containerBtns: {
+       flexDirection: 'row',
+       marginTop: 30
+    },
+    button: {
+       width: 150,
        padding: 10,
-       backgroundColor: '#4CAF50',
-       borderRadius:7,
-       margin: 12
-   },
-   TextInputStyle:
-   {
+       borderRadius:25,
+       margin: 12,
+       backgroundColor: 'rgba(72,61,139, 0.8)',
+    },
+    text: {
+      color: 'white',
+      fontSize: 16,
+      textAlign: 'center'
+    },
+    TextInputStyleTitulo: {
        borderWidth: 1,
        margin: 10,
-       borderColor: '#009688',
+       borderColor: '#000',
        height: 40,
-       borderRadius: 10,
+       borderRadius: 15,
+       marginBottom: 15,
+       textAlign: 'left',
+       marginLeft: 10,
+       marginTop: 20
+    },
+    TextInputStyleLocal: {
+       borderWidth: 1,
+       margin: 10,
+       borderColor: '#000',
+       height: 40,
+       borderRadius: 15,
+       marginBottom: 15,
+       textAlign: 'left',
+       marginLeft: 10
+    },
+    TextInputStyleDesc: {
+       height: 250,
+       borderWidth: 1,
+       margin: 10,
+       borderColor: '#000',
+       borderRadius: 15,
        marginBottom: 10,
-       textAlign: 'center',
-   },
+       textAlignVertical: 'top' 
+    },
  });
 
  export default AddNota;
