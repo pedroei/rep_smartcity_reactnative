@@ -1,6 +1,6 @@
 
 import React, { Component} from 'react';
-import { StyleSheet, Platform, View, Button, Image, Text, TextInput, TouchableOpacity, Alert, YellowBox, ListView, FlatList } from 'react-native';
+import { StyleSheet, Platform, View, Button, Image, Text, TextInput, TouchableOpacity, Alert, YellowBox, ListView, FlatList, TouchableWithoutFeedback } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -43,12 +43,12 @@ class Lista extends Component{
 
     }
 
-    GoToAddNota = () => {
-       this.props.navigation.navigate('AddNota'); 
-    }
-    GoBack = () => {
-       this.props.navigation.navigate('Login'); 
-    }
+    GoToAddNota = () => { this.props.navigation.navigate('AddNota'); }
+    GoBack = () => { this.props.navigation.navigate('Login'); }
+    actionOnRow(item) { 
+        //this.props.navigation.navigate('InfoItem', {id: item.id}); 
+        }
+
 
     render() {
         
@@ -59,15 +59,17 @@ class Lista extends Component{
                 ItemSeparatorComponent={this.ListViewItemSeparator}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
-                    <View style={{ backgroundColor: 'white', padding: 23}}>
-                        {/*<Text>Id: {item.id}</Text>*/}
-                        <Text 
-                        style={{ fontSize: 20, fontWeight: 'bold' }}>
-                         {item.titulo} </Text>
-                        <Text style={{ fontSize: 15}}>{item.local}</Text>
-                        <Text style={{ marginTop: 5 }}>{item.descricao}</Text>
-                        <Text style={{ textAlign: 'right' }}>{item.data}</Text>
-                    </View>
+                    <TouchableWithoutFeedback onPress={ () => this.actionOnRow(item)}>
+                        <View style={{ backgroundColor: 'white', padding: 23}}>
+                            {/*<Text>Id: {item.id}</Text>*/}
+                            <Text 
+                            style={{ fontSize: 20, fontWeight: 'bold' }}>
+                            {item.titulo} </Text>
+                            <Text style={{ fontSize: 15}}>{item.local}</Text>
+                            <Text style={{ marginTop: 5 }}>{item.descricao}</Text>
+                            <Text style={{ textAlign: 'right' }}>{item.data}</Text>
+                        </View>
+                    </TouchableWithoutFeedback>
                  )}
             />
             <View style = { styles.containerBtns }>

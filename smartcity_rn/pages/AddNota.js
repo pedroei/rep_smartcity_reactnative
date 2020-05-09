@@ -4,6 +4,8 @@ import { StyleSheet, Platform, View, Button, Image, Text, TextInput, TouchableOp
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
+import { StackActions } from '@react-navigation/native';
+
 import Realm from 'realm';
 let realm;
 
@@ -50,15 +52,12 @@ class AddNota extends Component{
               data: date,
               });
           });
-          Alert.alert("Registo inserido!")
+          Alert.alert("Registo inserido!");
+          this.props.navigation.dispatch(StackActions.replace('Lista'));
       }
     }
 
-      back = () =>
-    {
-       this.props.navigation.navigate('Lista');
-
-    }
+      back = () =>{ this.props.navigation.navigate('Lista'); }
 
     render() {
     return (
