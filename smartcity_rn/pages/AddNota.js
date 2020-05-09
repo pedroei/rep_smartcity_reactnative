@@ -14,7 +14,7 @@ class AddNota extends Component{
   constructor(props) {
     super(props);
     realm = new Realm({ path: 'notas.realm' });
-    var pessoas = realm.objects('nota');
+    var notas = realm.objects('nota');
 
     this.state = {
         titulo: '',
@@ -53,7 +53,8 @@ class AddNota extends Component{
               });
           });
           Alert.alert("Registo inserido!");
-          this.props.navigation.dispatch(StackActions.replace('Lista'));
+          this.props.navigation.navigate('Lista');
+
       }
     }
 

@@ -40,14 +40,18 @@ class Lista extends Component{
             <View style={{ height: 1, width: '100%', backgroundColor: '#000' }} />
             );
         };
+        
+        realm.addListener('change', () => {
+            this.reloadData();
+            });
 
     }
 
+    reloadData = () => { this.setState({FlatListItems: realm.objects('nota')}); }
+
     GoToAddNota = () => { this.props.navigation.navigate('AddNota'); }
     GoBack = () => { this.props.navigation.navigate('Login'); }
-    actionOnRow(item) { 
-        //this.props.navigation.navigate('InfoItem', {id: item.id}); 
-        }
+    actionOnRow(item) { this.props.navigation.navigate('EditarNota', item); }
 
 
     render() {

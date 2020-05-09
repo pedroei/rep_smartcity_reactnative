@@ -6,7 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Lista from './../pages/Lista';
 import AddNota from './../pages/AddNota';
-
+import EditarNota from './../pages/EditarNota';
 
 const Stack = createStackNavigator();
 
@@ -23,7 +23,11 @@ function StackLista({navigation}) {
           component={AddNota}
           options={{ title: 'Adicionar Nota' }}
         />
-
+        <Stack.Screen
+          name="EditarNota"
+          component={EditarNota}
+          options={{ title: 'Editar Nota' }}
+        />
       </Stack.Navigator>
   );
 }
