@@ -24,100 +24,126 @@ class EditarNota extends Component{
     realm = new Realm({ path: 'notas.realm' });
   }
 
-  updateRegisto=()=>{
-    var that = this;
-    if (this.state.titulo) {
-      if (this.state.descricao) {
-        if (this.state.local) {
+  updateNota=()=>{
+    if (this.state.titulo.trim() === "" || this.state.descricao.trim() === "" || this.state.local.trim() === "") {
+      Alert.alert("Preencha todo so campos!")
+    } else {
           realm.write(() => {
-            var obj = realm
-              .objects('nota')
-              .filtered('id =' + this.state.id);
+            var obj = realm.objects('nota').filtered('id =' + this.state.id);
             if (obj.length > 0) {
               obj[0].titulo = this.state.titulo;
               obj[0].descricao = this.state.descricao;
               obj[0].local = this.state.local;
-              Alert.alert(
-                'Info',
-                'Registo atualizado com sucesso',
-                [
-                  {
-                    text: 'Ok',
-                    onPress: () =>
-                      this.props.navigation.navigate('Lista'),
-                  },
-                ],
-                { cancelable: false }
-              );
+                Alert.alert(
+                  'Info',
+                  'Registo atualizado com sucesso',
+                  [{
+                      text: 'Ok',
+                      onPress: () =>
+                        this.props.navigation.navigate('Lista'),
+                    },],
+                  { cancelable: false }
+                );
             } else {
               alert('Atualização falhou');
             }
           });
-        } else {
-          alert('Preencha o titulo');
-        }
-      } else {
-        alert('Preencha a descricao');
       }
-    } else {
-      alert('Preencha o local');
-    }
   }
 
-  render() {
+  back = () =>{ this.props.navigation.navigate('Lista'); }
 
+  render() {
    return (
      <View style={styles.MainContainer}>
       <TextInput
-             placeholder="Inserir Titulo"
-             style = { styles.TextInputStyle }
+             placeholder="Titulo"
+             style = { styles.TextInputStyleTitulo }
              underlineColorAndroid = "transparent"
              value={this.state.titulo}
              onChangeText = { ( text ) => { this.setState({ titulo: text })} }
        />
        <TextInput
-             placeholder="Inserir Descricao"
-             style = { styles.TextInputStyle }
-             underlineColorAndroid = "transparent"
-             value={this.state.descricao}
-             onChangeText = { ( text ) => { this.setState({ descricao: text })} }
-       />
-       <TextInput
-             placeholder="Inserir Local"
-             style = { styles.TextInputStyle }
+             placeholder="Local"
+             style = { styles.TextInputStyleLocal }
              underlineColorAndroid = "transparent"
              value={this.state.local}
              onChangeText = { ( text ) => { this.setState({ local: text })} }
        />
-       <TouchableOpacity onPress={this.updateRegisto} activeOpacity={0.7} style={styles.button} >
-          <Text style={styles.TextStyle}> Atualizar </Text>
-        </TouchableOpacity>
+       <TextInput
+             placeholder="Descricao"
+             style = { styles.TextInputStyleDesc }
+             multiline={true}
+             underlineColorAndroid = "transparent"
+             value={this.state.descricao}
+             onChangeText = { ( text ) => { this.setState({ descricao: text })} }
+       />
+       <View style = { styles.containerBtns }>
+          <TouchableOpacity onPress={this.back}  activeOpacity={0.7} style={styles.button} >
+              <Text style={styles.text}> Voltar </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this.updateNota} activeOpacity={0.7} style={styles.button} >
+            <Text style={styles.text}> Atualizar </Text>
+          </TouchableOpacity>
+        </View>
+
      </View>
    );
  }
+
  }
 
  const styles = StyleSheet.create({
-   MainContainer: {
+    MainContainer: {
      flex: 1,
-   },
-   button: {
-       height: 40,
+     backgroundColor: '#fff',
+    },
+    containerBtns: {
+       flexDirection: 'row',
+       marginTop: 30
+    },
+    button: {
+       width: 150,
        padding: 10,
-       backgroundColor: '#4CAF50',
-       borderRadius:7,
-       margin: 12
-   },
-   TextInputStyle:
-   {
-borderWidth: 1,
+       borderRadius:25,
+       margin: 12,
+       backgroundColor: 'rgba(72,61,139, 0.8)',
+    },
+    text: {
+      color: 'white',
+      fontSize: 16,
+      textAlign: 'center'
+    },
+    TextInputStyleTitulo: {
+       borderWidth: 1,
        margin: 10,
-       borderColor: '#009688',
+       borderColor: '#000',
        height: 40,
-       borderRadius: 10,
+       borderRadius: 15,
+       marginBottom: 15,
+       textAlign: 'left',
+       marginLeft: 10,
+       marginTop: 20
+    },
+    TextInputStyleLocal: {
+       borderWidth: 1,
+       margin: 10,
+       borderColor: '#000',
+       height: 40,
+       borderRadius: 15,
+       marginBottom: 15,
+       textAlign: 'left',
+       marginLeft: 10
+    },
+    TextInputStyleDesc: {
+       height: 250,
+       borderWidth: 1,
+       margin: 10,
+       borderColor: '#000',
+       borderRadius: 15,
        marginBottom: 10,
-       textAlign: 'center',
-   },
+       textAlignVertical: 'top' 
+    },
  });
 
  export default EditarNota;
