@@ -32,48 +32,54 @@ function Login({navigation}) {
      });
 
   return(
-    <ImageBackground source={bg} style={styles.backgroundContainer}>
-      <View style={styles.logoContainer}>
+    <ImageBackground source={bg} style={dimensions.window.height > dimensions.window.width ? styles.backgroundContainer : styles.backgroundContainerLand}>
+      <View style={dimensions.window.height > dimensions.window.width ? styles.logoContainer : styles.logoContainerLand}>
         <Image source={logo} style={styles.logo}/>
         <Text style={styles.logoText}>SmartCity</Text>
       </View>
 
-      <View style={styles.inputContainer}>
-   
-        <TextInput 
-          style={styles.input}
-          placeholder={'Email'}
-          placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
-          underlineColorAndroid='transparent'
-          onChangeText={text => setEmail(text)}
-        />
-      </View>
+      <View>
+        <View style={styles.inputContainer}>
+    
+          <TextInput 
+            style={dimensions.window.height > dimensions.window.width ? styles.input : styles.inputLand}
+            placeholder={'Email'}
+            placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
+            underlineColorAndroid='transparent'
+            onChangeText={text => setEmail(text)}
+          />
+        </View>
 
-      <View style={styles.inputContainer}>
-        <TextInput 
-          style={styles.input}
-          placeholder={'Password'}
-          secureTextEntry={true}
-          placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
-          underlineColorAndroid='transparent'
-          onChangeText={text => setPassword(text)}
-        />
-      </View>
-
+        <View style={styles.inputContainer}>
+          <TextInput 
+            style={dimensions.window.height > dimensions.window.width ? styles.input : styles.inputLand}
+            placeholder={'Password'}
+            secureTextEntry={true}
+            placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
+            underlineColorAndroid='transparent'
+            onChangeText={text => setPassword(text)}
+          />
+        </View>
+      
+      <View style={dimensions.window.height > dimensions.window.width ? styles.containerbtns : styles.containerbtnsLand}>
+      <View style={dimensions.window.height > dimensions.window.width ? styles.containerLogin : styles.containerLoginLand}>
       <TouchableOpacity 
-        style={styles.btnLogin}
+        style={dimensions.window.height > dimensions.window.width ? styles.btnLogin : styles.btnLand}
         onPress={() => navigation.dispatch(StackActions.replace('Mapa'))}>
         <Text style={styles.text}>Login</Text>
       </TouchableOpacity>
-
-      <Text style={styles.textRegistar}>Registar</Text>
-
+      <Text style={dimensions.window.height > dimensions.window.width ? styles.textRegistar : styles.textRegistarLand}>Registar</Text>
+      </View>
+      <View>
       <TouchableOpacity 
-        style={styles.btnNotas}
+        style={dimensions.window.height > dimensions.window.width ? styles.btnNotas : styles.btnLand}
         onPress={() => navigation.navigate('StackLista') }>
         <Text style={styles.text}>Notas pessoais</Text>
       </TouchableOpacity>
+      </View>
+      </View>
 
+      </View>
     </ImageBackground>
   );
 }
@@ -86,10 +92,23 @@ const styles = StyleSheet.create({
         //justifyContent: 'center',
         alignItems: 'center'
     },
+    backgroundContainerLand: {
+        flex: 1,
+        width: null,
+        height: null,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
     logoContainer: {
       alignItems: 'center',
       marginTop: 35,
       marginBottom: 50
+    },
+    logoContainerLand: {
+      alignItems: 'center',
+      marginTop: 35,
+      marginBottom: 50,
+      marginLeft: 20
     },
     logo: {
       width: 120,
@@ -107,6 +126,17 @@ const styles = StyleSheet.create({
     },
     input: {
       width: WIDTH-55,
+      height: 45,
+      borderRadius: 25,
+      fontSize: 16,
+      //paddingLeft: 45,
+      paddingLeft: 20,
+      backgroundColor: 'rgba(0, 0, 0, 0.35)',
+      color: 'rgba(255, 255, 255, 0.7)',
+      marginHorizontal: 25
+    },
+    inputLand: {
+      width: 400,
       height: 45,
       borderRadius: 25,
       fontSize: 16,
@@ -134,6 +164,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       marginTop: 20
     },
+
     btnNotas: {
       width: 150,
       height: 45,
@@ -141,6 +172,15 @@ const styles = StyleSheet.create({
       backgroundColor: 'rgba(72,61,139, 0.8)',
       justifyContent: 'center',
       marginTop: 50
+    },
+    btnLand: {
+      width: 150,
+      padding: 10,
+      borderRadius:25,
+      margin: 12,
+      backgroundColor: 'rgba(72,61,139, 0.8)',
+      justifyContent: 'center',
+      
     },
     text: {
       color: 'rgba(255, 255, 255, 0.7)',
@@ -152,8 +192,31 @@ const styles = StyleSheet.create({
       fontSize: 15,
       fontWeight: '500',
       marginTop: 5,
-      opacity: 0.65
+      opacity: 0.9
     },
+    textRegistarLand: {
+      color: 'white',
+      fontSize: 15,
+      fontWeight: '500',
+      opacity: 0.9,
+      
+    },
+    containerbtns: {
+      alignItems: 'center'
+    },
+    containerbtnsLand: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      marginHorizontal: 25
+    },
+    containerLogin: {
+      alignItems: 'center',
+    },
+    containerLoginLand: {
+      marginTop:20,
+      marginLeft:20,
+      alignItems: 'center',
+    }
 });
 
 export default Login;
