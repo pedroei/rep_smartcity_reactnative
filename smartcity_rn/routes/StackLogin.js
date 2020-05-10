@@ -17,17 +17,17 @@ function StackLogin({navigation}) {
         <Stack.Screen
           name="Login"
           component={Login}
-          options={{ title: 'SafeCity',  headerShown: false  } }
+          options={{ title: 'SmartCity',  headerShown: false  } }
         />
         <Stack.Screen
           name="Mapa"
           component={Mapa}
-          options={{ title: 'SafeCity',  headerShown: false  } }
+          options={{ title: 'SmartCity',  headerShown: false  } }
         />
         <Stack.Screen
           name="StackLista"
           component={StackLista}
-          options={{ title: 'SafeCity',  headerShown: false  } }
+          options={{ title: 'SmartCity',  headerShown: false  } }
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -16,7 +16,11 @@ const translations = {
     Password: 'Password',
     Login: 'Login',
     Registar: 'Registar',
-    notas_pessoais: 'Notas Pessoais'
+    notas_pessoais: 'Notas Pessoais',
+    Apagar: 'Apagar',
+    add_nota: 'Adicionar Nota',
+    edit_nota: 'Editar Nota',
+    info: 'Info'
   }
 };
 
