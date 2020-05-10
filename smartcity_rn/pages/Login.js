@@ -1,10 +1,11 @@
 
-import React, { Component, useState, useEffect} from 'react';
+import React, { Component, useState, useEffect, useContext} from 'react';
 import { StyleSheet, View, Text, Image, Button, TextInput, ImageBackground, Dimensions, TouchableOpacity} from 'react-native';
 
 import {StackActions} from '@react-navigation/native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
+import {LocalizationContext} from './../services/localization/LocalizationContext';
 import bg from './../images/backgound.jpg';
 import logo from './../images/city.png';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -17,6 +18,8 @@ const { width: WIDTH } = Dimensions.get('window');
 function Login({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const {translations} = useContext(LocalizationContext);
 
   const [dimensions, setDimensions] = useState({ window, screen });
 
@@ -35,7 +38,7 @@ function Login({navigation}) {
     <ImageBackground source={bg} style={dimensions.window.height > dimensions.window.width ? styles.backgroundContainer : styles.backgroundContainerLand}>
       <View style={dimensions.window.height > dimensions.window.width ? styles.logoContainer : styles.logoContainerLand}>
         <Image source={logo} style={styles.logo}/>
-        <Text style={styles.logoText}>SmartCity</Text>
+        <Text style={styles.logoText}>{translations.WELCOME}</Text>
       </View>
 
       <View>
