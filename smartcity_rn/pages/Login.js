@@ -1,5 +1,5 @@
 
-import React, { Component, useState} from 'react';
+import React, { Component, useState, useEffect} from 'react';
 import { StyleSheet, View, Text, Image, Button, TextInput, ImageBackground, Dimensions, TouchableOpacity} from 'react-native';
 
 import {StackActions} from '@react-navigation/native';
@@ -9,11 +9,27 @@ import bg from './../images/backgound.jpg';
 import logo from './../images/city.png';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
+const window = Dimensions.get("window");
+const screen = Dimensions.get("screen");
+
 const { width: WIDTH } = Dimensions.get('window');
 
 function Login({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const [dimensions, setDimensions] = useState({ window, screen });
+
+     const onChange = ({ window, screen }) => {
+       setDimensions({ window, screen });
+     };
+
+     useEffect(() => {
+       Dimensions.addEventListener("change", onChange);
+       return () => {
+         Dimensions.removeEventListener("change", onChange);
+       };
+     });
 
   return(
     <ImageBackground source={bg} style={styles.backgroundContainer}>
@@ -24,7 +40,6 @@ function Login({navigation}) {
 
       <View style={styles.inputContainer}>
    
-        
         <TextInput 
           style={styles.input}
           placeholder={'Email'}
