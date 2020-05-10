@@ -1,9 +1,11 @@
 
 import React, { Component} from 'react';
-import { StyleSheet, Platform, View, Button, Image, Text, TextInput, TouchableOpacity, Alert, YellowBox, ListView, FlatList, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Platform, View, Button, Image, Text, TextInput, TouchableOpacity, Alert, YellowBox, ListView, FlatList, TouchableWithoutFeedback, Animated } from 'react-native';
 
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 import Realm from 'realm';
 let realm ;
@@ -33,13 +35,9 @@ class Lista extends Component{
         var notas = realm.objects('nota');
         this.state = {
             FlatListItems: notas,
+            id: '',
         };
 
-        ListViewItemSeparator = () => {
-            return (
-            <View style={{ height: 1, width: '100%', backgroundColor: '#000' }} />
-            );
-        };
         
         realm.addListener('change', () => {
             this.reloadData();
@@ -53,6 +51,43 @@ class Lista extends Component{
     GoBack = () => { this.props.navigation.navigate('Login'); }
     actionOnRow(item) { this.props.navigation.navigate('EditarNota', item); }
 
+    deleteSwipe = (progress, dragX) => { 
+
+        const scale = dragX.interpolate({
+            inputRange:[-100, 0],
+            outputRange:[1, 0],
+            extrapolate: 'clamp'
+        })
+
+        return(
+            <TouchableOpacity onPress={ this.alertDelete }> 
+                <View style = { styles.containerSwipe }>
+                    <Animated.Text style = { [styles.textSwipe, {transform: [{ scale: scale }] } ] }>Apagar</Animated.Text>
+                </View> 
+            </TouchableOpacity>
+        );
+    }
+
+    alertDelete = () =>{
+        Alert.alert(
+            'Info',
+            'Tem a certeza que quer apagar este registo?',
+            [
+                { text: 'Não' },
+                {
+                    text: 'Sim',
+                    onPress: () =>{
+                        //Esta linha recarrega a pagina, arranjar outra maneira de fechar o swipe!
+                        //this.props.navigation.dispatch(StackActions.replace('Lista'))
+                        realm.write(() => {
+                            let task = realm.objects('nota').filtered('id = ' + this.state.id);
+                            realm.delete(task);
+                        });
+                    }
+                },
+            ],
+        );
+    }
 
     render() {
         
@@ -60,20 +95,25 @@ class Lista extends Component{
           <View style = { styles.MainContainer }>
           <FlatList
                 data={this.state.FlatListItems}
-                ItemSeparatorComponent={this.ListViewItemSeparator}
+                ItemSeparatorComponent={() => <View style={{ height: 1, width: '100%', backgroundColor: 'rgba(0, 0, 0, 0.2)' }}></View>}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
-                    <TouchableWithoutFeedback onPress={ () => this.actionOnRow(item)}>
-                        <View style={{ backgroundColor: 'white', padding: 23}}>
-                            {/*<Text>Id: {item.id}</Text>*/}
-                            <Text 
-                            style={{ fontSize: 20, fontWeight: 'bold' }}>
-                            {item.titulo} </Text>
-                            <Text style={{ fontSize: 15}}>{item.local}</Text>
-                            <Text style={{ marginTop: 5 }}>{item.descricao}</Text>
-                            <Text style={{ textAlign: 'right' }}>{item.data}</Text>
-                        </View>
-                    </TouchableWithoutFeedback>
+                    <Swipeable
+                        renderRightActions={this.deleteSwipe}
+                        //onSwipeableRightOpen={this.alertDelete}
+                    >
+                        <TouchableWithoutFeedback onPress={ () => this.actionOnRow(item)}>
+                            <View style={{ backgroundColor: 'white', padding: 23}}>
+                                <Text>Id: {item.id}</Text>
+                                <Text 
+                                style={{ fontSize: 20, fontWeight: 'bold' }}>
+                                {item.titulo} </Text>
+                                <Text style={{ fontSize: 15}}>{item.local}</Text>
+                                <Text style={{ marginTop: 5 }}>{item.descricao}</Text>
+                                <Text style={{ textAlign: 'right' }}>{item.data}</Text>
+                            </View>
+                        </TouchableWithoutFeedback>
+                    </Swipeable>
                  )}
             />
             <View style = { styles.containerBtns }>
@@ -117,10 +157,21 @@ const styles = StyleSheet.create({
       textAlign: 'center'
     },
     textViewContainer: {
-     textAlignVertical:'center',
-     padding:10,
-     fontSize: 20,
-     color: '#000',
+        textAlignVertical:'center',
+        padding:10,
+        fontSize: 20,
+        color: '#000',
+    },
+    containerSwipe: {
+        backgroundColor: 'red',
+        justifyContent: 'center',
+        height: '100%'
+    },
+    textSwipe: {
+        color: 'white',
+        fontSize: 17,
+        padding: 20,
+        //textAlign: 'right'
     }
  });
 
