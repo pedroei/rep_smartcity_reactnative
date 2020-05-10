@@ -60,15 +60,15 @@ class Lista extends Component{
         })
 
         return(
-            <TouchableOpacity onPress={ this.alertDelete }> 
+            
                 <View style = { styles.containerSwipe }>
                     <Animated.Text style = { [styles.textSwipe, {transform: [{ scale: scale }] } ] }>Apagar</Animated.Text>
                 </View> 
-            </TouchableOpacity>
+            
         );
     }
 
-    alertDelete = () =>{
+    alertDelete(item) {
         Alert.alert(
             'Info',
             'Tem a certeza que quer apagar este registo?',
@@ -77,11 +77,11 @@ class Lista extends Component{
                 {
                     text: 'Sim',
                     onPress: () =>{
-                        //Esta linha recarrega a pagina, arranjar outra maneira de fechar o swipe!
-                        //this.props.navigation.dispatch(StackActions.replace('Lista'))
                         realm.write(() => {
-                            let task = realm.objects('nota').filtered('id = ' + this.state.id);
+                            let task = realm.objects('nota').filtered('id = ' + item.id);
                             realm.delete(task);
+                            //Esta linha recarrega a pagina, arranjar outra maneira de fechar o swipe!
+                            this.props.navigation.dispatch(StackActions.replace('Lista'))
                         });
                     }
                 },
@@ -100,11 +100,11 @@ class Lista extends Component{
                 renderItem={({ item }) => (
                     <Swipeable
                         renderRightActions={this.deleteSwipe}
-                        //onSwipeableRightOpen={this.alertDelete}
+                        onSwipeableRightOpen={() => this.alertDelete(item)}
                     >
                         <TouchableWithoutFeedback onPress={ () => this.actionOnRow(item)}>
                             <View style={{ backgroundColor: 'white', padding: 23}}>
-                                <Text>Id: {item.id}</Text>
+                                {/*<Text>Id: {item.id}</Text>*/}
                                 <Text 
                                 style={{ fontSize: 20, fontWeight: 'bold' }}>
                                 {item.titulo} </Text>
@@ -165,13 +165,13 @@ const styles = StyleSheet.create({
     containerSwipe: {
         backgroundColor: 'red',
         justifyContent: 'center',
-        height: '100%'
+        flex: 1
     },
     textSwipe: {
         color: 'white',
         fontSize: 17,
         padding: 20,
-        //textAlign: 'right'
+        textAlign: 'right'
     }
  });
 
