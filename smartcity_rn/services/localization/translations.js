@@ -3,12 +3,20 @@ export const DEFAULT_LANGUAGE = 'en';
 
 const translations = {
   en: {
-    WELCOME: 'Welcome to Localization',
-    BUTTON: 'b en'
+    SmartCity: 'SmartCity',
+    Email: 'Email',
+    Password: 'Password',
+    Login: 'Login',
+    Registar: 'Sign in',
+    notas_pessoais: 'Personal Notes'
   },
   pt: {
-    WELCOME: 'Bem-vindo à multi-lingua',
-    BUTTON: 'b pt'
+    SmartCity: 'SmartCity',
+    Email: 'Email',
+    Password: 'Password',
+    Login: 'Login',
+    Registar: 'Registar',
+    notas_pessoais: 'Notas Pessoais'
   }
 };
 

@@ -38,7 +38,7 @@ function Login({navigation}) {
     <ImageBackground source={bg} style={dimensions.window.height > dimensions.window.width ? styles.backgroundContainer : styles.backgroundContainerLand}>
       <View style={dimensions.window.height > dimensions.window.width ? styles.logoContainer : styles.logoContainerLand}>
         <Image source={logo} style={styles.logo}/>
-        <Text style={styles.logoText}>{translations.WELCOME}</Text>
+        <Text style={styles.logoText}>{translations.SmartCity}</Text>
       </View>
 
       <View>
@@ -46,7 +46,7 @@ function Login({navigation}) {
     
           <TextInput 
             style={dimensions.window.height > dimensions.window.width ? styles.input : styles.inputLand}
-            placeholder={'Email'}
+            placeholder={translations.Email}
             placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
             underlineColorAndroid='transparent'
             onChangeText={text => setEmail(text)}
@@ -56,7 +56,7 @@ function Login({navigation}) {
         <View style={styles.inputContainer}>
           <TextInput 
             style={dimensions.window.height > dimensions.window.width ? styles.input : styles.inputLand}
-            placeholder={'Password'}
+            placeholder={translations.Password}
             secureTextEntry={true}
             placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
             underlineColorAndroid='transparent'
@@ -69,15 +69,15 @@ function Login({navigation}) {
       <TouchableOpacity 
         style={dimensions.window.height > dimensions.window.width ? styles.btnLogin : styles.btnLand}
         onPress={() => navigation.dispatch(StackActions.replace('Mapa'))}>
-        <Text style={styles.text}>Login</Text>
+        <Text style={styles.text}>{translations.Login}</Text>
       </TouchableOpacity>
-      <Text style={dimensions.window.height > dimensions.window.width ? styles.textRegistar : styles.textRegistarLand}>Registar</Text>
+      <Text style={dimensions.window.height > dimensions.window.width ? styles.textRegistar : styles.textRegistarLand}>{translations.Registar}</Text>
       </View>
       <View>
       <TouchableOpacity 
         style={dimensions.window.height > dimensions.window.width ? styles.btnNotas : styles.btnLand}
         onPress={() => navigation.navigate('StackLista') }>
-        <Text style={styles.text}>Notas pessoais</Text>
+        <Text style={styles.text}>{translations.notas_pessoais}</Text>
       </TouchableOpacity>
       </View>
       </View>
