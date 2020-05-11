@@ -20,17 +20,17 @@ function StackLista({navigation}) {
         <Stack.Screen
           name="Lista"
           component={Lista}
-          options={{ title: translations.notas_pessoais }}
+          options={ ({ navigation }) => ({ title: translations.notas_pessoais, headerLeft: null, })}
         />
         <Stack.Screen
           name="AddNota"
           component={AddNota}
-          options={{ title: translations.add_nota }}
+          options={ ({ navigation }) => ({ title: translations.add_nota, headerLeft: null, }) }
         />
         <Stack.Screen
           name="EditarNota"
           component={EditarNota}
-          options={{ title: translations.edit_nota }}
+          options={ ({ navigation }) => ({ title: translations.edit_nota, headerLeft: null }) }
         />
       </Stack.Navigator>
   );

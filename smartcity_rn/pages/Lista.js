@@ -1,8 +1,10 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { Component, useState, useEffect, useContext } from 'react';
 import { StyleSheet, Platform, View, Button, TouchableWithoutFeedback, Image, Text, TextInput, TouchableOpacity, Alert, YellowBox, FlatList } from 'react-native';
 
 import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+
+import {LocalizationContext} from './../services/localization/LocalizationContext';
 
 import Realm from 'realm';
 
@@ -46,7 +48,9 @@ function actionOnRow(item, navigation) {
 }
 
 function Lista({ navigation }) {
+  const {translations} = useContext(LocalizationContext);
   const notas = getupdateddata(query);
+
   return(
      <View style = { styles.MainContainer }>
          <FlatList
@@ -71,12 +75,12 @@ function Lista({ navigation }) {
             <TouchableOpacity
                 style = {styles.btn}
                 onPress={ () => navigation.navigate('Login') }>
-                <Text style={styles.text}> Voltar</Text>
+                <Text style={styles.text}>{translations.voltar}</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style = {styles.btn}
                 onPress={ () => navigation.navigate('AddNota') }>
-                <Text style={styles.text}> Adicionar Nota</Text>
+                <Text style={styles.text}>{translations.add_nota}</Text>
             </TouchableOpacity>
         </View>
      </View>

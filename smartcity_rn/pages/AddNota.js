@@ -1,13 +1,17 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { Component, useState, useEffect, useContext } from 'react';
 import { StyleSheet, Platform, View, Button, Image, Text, TextInput, TouchableOpacity, Alert, YellowBox, FlatList } from 'react-native';
 
 import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
+import {LocalizationContext} from './../services/localization/LocalizationContext';
+
 import Realm from 'realm';
 let realm ;
 
 function AddNota({ navigation }) {
+  const {translations} = useContext(LocalizationContext);
+
   const [titulo, setTitulo] = useState('');
   const [descricao, setDescricao] = useState('');
   const [local, setLocal] = useState('');
@@ -15,7 +19,7 @@ function AddNota({ navigation }) {
 
   function addRegisto(){
       if (titulo.trim() === "" || descricao.trim() === "" || local.trim() === "") {
-        Alert.alert("Preencha todo so campos!")
+        Alert.alert(translations.preencher)
       } else {
         realm = new Realm({ path: 'notas.realm' });
 
@@ -42,7 +46,7 @@ function AddNota({ navigation }) {
             data: date
             });
         });
-        Alert.alert("Nota criada!");
+        Alert.alert(translations.nota_criada);
         navigation.navigate('Lista');
       }
   }
@@ -50,19 +54,19 @@ function AddNota({ navigation }) {
   return (
     <View style={styles.MainContainer}>
       <TextInput
-            placeholder="Titulo"
+            placeholder= {translations.titulo}
             style = { styles.TextInputStyleTitulo }
             underlineColorAndroid = "transparent"
             onChangeText={text => setTitulo(text)}
       />
       <TextInput
-            placeholder="Local"
+            placeholder={translations.local}
             style = { styles.TextInputStyleLocal }
             underlineColorAndroid = "transparent"
             onChangeText = { text => setLocal(text)}
       />
       <TextInput
-            placeholder="Descricao"
+            placeholder={translations.descricao}
             style = { styles.TextInputStyleDesc }
             multiline={true}
             underlineColorAndroid = "transparent"
@@ -71,10 +75,10 @@ function AddNota({ navigation }) {
 
        <View style = { styles.containerBtns }>
         <TouchableOpacity onPress={() => navigation.dispatch(StackActions.popToTop()) }  activeOpacity={0.7} style={styles.button} >
-            <Text style={styles.text}> Voltar </Text>
+            <Text style={styles.text}>{translations.voltar}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={addRegisto} activeOpacity={0.7} style={styles.button} >
-            <Text style={styles.text}> Adicionar </Text>
+            <Text style={styles.text}>{translations.add_nota}</Text>
           </TouchableOpacity>
         </View>
 

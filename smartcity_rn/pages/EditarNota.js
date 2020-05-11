@@ -1,14 +1,18 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { Component, useState, useEffect, useContext } from 'react';
 import { StyleSheet, Platform, View, Button, Image, Text, TextInput, TouchableOpacity, Alert, YellowBox, ListView } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StackActions } from '@react-navigation/native';
 
+import {LocalizationContext} from './../services/localization/LocalizationContext';
+
 import Realm from 'realm';
 let realm ;
 
 function EditarNota({ route, navigation }) {
+  const {translations} = useContext(LocalizationContext);
+
   const { id, titulo, descricao, local } = route.params;
 
   const [titulo1, setTitulo1] = useState(titulo);
@@ -17,7 +21,7 @@ function EditarNota({ route, navigation }) {
 
   function updateNota(){
     if (titulo1.trim() === "" || descricao1.trim() === "" || local1.trim() === "") {
-      Alert.alert("Preencha todo so campos!")
+      Alert.alert(translations.preencher)
     } else {
         realm = new Realm({ path: 'notas.realm' });
 
@@ -30,11 +34,11 @@ function EditarNota({ route, navigation }) {
             obj[0].descricao = descricao1
             obj[0].local = local1
             Alert.alert(
-              'Info',
-              'Nota editada!',
+              translations.info,
+              translations.nota_editada,
               [
                 {
-                  text: 'Ok',
+                  text: translations.ok,
                   onPress: () =>
                     navigation.dispatch(StackActions.popToTop())
                 },
@@ -42,7 +46,7 @@ function EditarNota({ route, navigation }) {
               { cancelable: false }
             );
           } else {
-            alert('Edição falhou');
+            alert(translations.editar_falhou);
           }
         });
       }
@@ -51,19 +55,19 @@ function EditarNota({ route, navigation }) {
   return (
     <View style={styles.MainContainer}>
       <TextInput
-            placeholder="Titulo"
+            placeholder={translations.titulo}
             style = { styles.TextInputStyleTitulo }
             underlineColorAndroid = "transparent"
             onChangeText={text => setTitulo1(text)}
       >{titulo1}</TextInput>
       <TextInput
-            placeholder="Local"
+            placeholder={translations.local}
             style = { styles.TextInputStyleLocal }
             underlineColorAndroid = "transparent"
             onChangeText = { text => setLocal1(text)}
       >{local1}</TextInput>
       <TextInput
-            placeholder="Descricao"
+            placeholder={translations.descricao}
             style = { styles.TextInputStyleDesc }
             multiline={true}
             underlineColorAndroid = "transparent"
@@ -72,10 +76,10 @@ function EditarNota({ route, navigation }) {
 
        <View style = { styles.containerBtns }>
           <TouchableOpacity onPress={() => navigation.dispatch(StackActions.popToTop())}  activeOpacity={0.7} style={styles.button} >
-              <Text style={styles.text}> Voltar </Text>
+              <Text style={styles.text}>{translations.voltar}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={updateNota} activeOpacity={0.7} style={styles.button} >
-            <Text style={styles.text}> Atualizar </Text>
+            <Text style={styles.text}>{translations.atualizar}</Text>
           </TouchableOpacity>
         </View>
 
