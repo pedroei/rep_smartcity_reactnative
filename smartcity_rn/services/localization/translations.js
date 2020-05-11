@@ -21,7 +21,11 @@ const translations = {
     nota_editada: 'Note edited!',
     ok: 'OK',
     editar_falhou: 'Editing failure',
-    atualizar: 'Update'
+    atualizar: 'Update',
+    confirmacao_apagar: 'Do you really want to delete this note?',
+    sim: 'Yes',
+    nao: 'No',
+    apagar: 'Delete'
   },
 
   pt: {
@@ -43,7 +47,11 @@ const translations = {
     nota_editada: 'Nota editada!',
     ok: 'Ok',
     editar_falhou: 'Falha na edição!',
-    atualizar: 'Atualizar'
+    atualizar: 'Atualizar',
+    confirmacao_apagar: 'Tem a certeza que pretende apagar esta nota?',
+    sim: 'Sim',
+    nao: 'Não',
+    apagar: 'Apagar'
   }
 };
 

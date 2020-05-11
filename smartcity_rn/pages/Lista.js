@@ -1,8 +1,10 @@
 import React, { Component, useState, useEffect, useContext } from 'react';
-import { StyleSheet, Platform, View, Button, TouchableWithoutFeedback, Image, Text, TextInput, TouchableOpacity, Alert, YellowBox, FlatList } from 'react-native';
+import { StyleSheet, Platform, View, Button, TouchableWithoutFeedback, Image, Text, TextInput, TouchableOpacity, Alert, YellowBox, FlatList, Animated } from 'react-native';
 
 import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 import {LocalizationContext} from './../services/localization/LocalizationContext';
 
@@ -51,6 +53,35 @@ function Lista({ navigation }) {
   const {translations} = useContext(LocalizationContext);
   const notas = getupdateddata(query);
 
+  function deleteSwipe (progress, dragX) { 
+    const scale = dragX.interpolate({
+      inputRange:[-100, 0],
+      outputRange:[1, 0],
+      extrapolate: 'clamp'
+    })
+    return(          
+      <View style = { styles.containerSwipe }>
+        <Animated.Text style = { [styles.textSwipe, {transform: [{ scale: scale }] } ] }>{translations.apagar}</Animated.Text>
+      </View>           
+    );
+  }
+
+  function alertDelete(item){
+    Alert.alert(
+      translations.info,
+      translations.confirmacao_apagar,
+    [
+      {text: translations.nao, onPress: () => console.log('Cancelado'), style: 'cancel'},
+      {text: translations.sim, onPress: () => {
+        realm.write(() => {
+          let task = realm.objects('nota').filtered('id = ' + item.id);
+          realm.delete(task);
+        });
+      }},
+    ],
+    );
+  }
+
   return(
      <View style = { styles.MainContainer }>
          <FlatList
@@ -58,17 +89,22 @@ function Lista({ navigation }) {
             ItemSeparatorComponent={() => <View style={{ height: 1, width: '100%', backgroundColor: 'rgba(0, 0, 0, 0.2)' }}></View>}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
-              <TouchableWithoutFeedback onPress={ () => actionOnRow(item, navigation)}>
-                    <View style={{ backgroundColor: 'white', padding: 23}}>
-                        {/*<Text>Id: {item.id}</Text>*/}
-                        <Text 
-                        style={{ fontSize: 20, fontWeight: 'bold' }}>
-                        {item.titulo} </Text>
-                        <Text style={{ fontSize: 15}}>{item.local}</Text>
-                        <Text style={{ marginTop: 5 }}>{item.descricao}</Text>
-                        <Text style={{ textAlign: 'right' }}>{item.data}</Text>
-                    </View>
-             </TouchableWithoutFeedback>
+              <Swipeable
+                renderRightActions={deleteSwipe}
+                onSwipeableRightOpen={() => alertDelete(item)}
+              >
+                <TouchableWithoutFeedback onPress={ () => actionOnRow(item, navigation)}>
+                      <View style={{ backgroundColor: 'white', padding: 23}}>
+                          {/*<Text>Id: {item.id}</Text>*/}
+                          <Text 
+                          style={{ fontSize: 20, fontWeight: 'bold' }}>
+                          {item.titulo} </Text>
+                          <Text style={{ fontSize: 15}}>{item.local}</Text>
+                          <Text style={{ marginTop: 5 }}>{item.descricao}</Text>
+                          <Text style={{ textAlign: 'right' }}>{item.data}</Text>
+                      </View>
+                </TouchableWithoutFeedback>
+              </Swipeable>
              )}
          />
         <View style = { styles.containerBtns }>
