@@ -1,97 +1,88 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { StyleSheet, Platform, View, Button, Image, Text, TextInput, TouchableOpacity, Alert, YellowBox, ListView } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
 import { StackActions } from '@react-navigation/native';
 
 import Realm from 'realm';
 let realm ;
 
-const Stack = createStackNavigator();
+function EditarNota({ route, navigation }) {
+  const { id, titulo, descricao, local } = route.params;
 
-class EditarNota extends Component{
+  const [titulo1, setTitulo1] = useState(titulo);
+  const [descricao1, setDescricao1] = useState(descricao);
+  const [local1, setLocal1] = useState(local);
 
-  constructor(props){
-    super(props);
-    this.state = {
-      titulo : this.props.route.params.titulo,
-      descricao : this.props.route.params.descricao,
-      local : this.props.route.params.local,
-      id: this.props.route.params.id,
-    }
-    realm = new Realm({ path: 'notas.realm' });
-  }
-
-  updateNota=()=>{
-    if (this.state.titulo.trim() === "" || this.state.descricao.trim() === "" || this.state.local.trim() === "") {
+  function updateNota(){
+    if (titulo1.trim() === "" || descricao1.trim() === "" || local1.trim() === "") {
       Alert.alert("Preencha todo so campos!")
     } else {
-          realm.write(() => {
-            var obj = realm.objects('nota').filtered('id =' + this.state.id);
-            if (obj.length > 0) {
-              obj[0].titulo = this.state.titulo;
-              obj[0].descricao = this.state.descricao;
-              obj[0].local = this.state.local;
-                Alert.alert(
-                  'Info',
-                  'Registo atualizado com sucesso',
-                  [{
-                      text: 'Ok',
-                      onPress: () =>
-                        this.props.navigation.navigate('Lista'),
-                    },],
-                  { cancelable: false }
-                );
-            } else {
-              alert('Atualização falhou');
-            }
-          });
+        realm = new Realm({ path: 'notas.realm' });
+
+        realm.write(() => {
+          var obj = realm
+            .objects('nota')
+            .filtered('id =' + id);
+          if (obj.length > 0) {
+            obj[0].titulo = titulo1;
+            obj[0].descricao = descricao1
+            obj[0].local = local1
+            Alert.alert(
+              'Info',
+              'Nota editada!',
+              [
+                {
+                  text: 'Ok',
+                  onPress: () =>
+                    navigation.dispatch(StackActions.popToTop())
+                },
+              ],
+              { cancelable: false }
+            );
+          } else {
+            alert('Edição falhou');
+          }
+        });
       }
   }
 
-  back = () =>{ this.props.navigation.navigate('Lista'); }
-
-  render() {
-   return (
-     <View style={styles.MainContainer}>
+  return (
+    <View style={styles.MainContainer}>
       <TextInput
-             placeholder="Titulo"
-             style = { styles.TextInputStyleTitulo }
-             underlineColorAndroid = "transparent"
-             value={this.state.titulo}
-             onChangeText = { ( text ) => { this.setState({ titulo: text })} }
-       />
-       <TextInput
-             placeholder="Local"
-             style = { styles.TextInputStyleLocal }
-             underlineColorAndroid = "transparent"
-             value={this.state.local}
-             onChangeText = { ( text ) => { this.setState({ local: text })} }
-       />
-       <TextInput
-             placeholder="Descricao"
-             style = { styles.TextInputStyleDesc }
-             multiline={true}
-             underlineColorAndroid = "transparent"
-             value={this.state.descricao}
-             onChangeText = { ( text ) => { this.setState({ descricao: text })} }
-       />
+            placeholder="Titulo"
+            style = { styles.TextInputStyleTitulo }
+            underlineColorAndroid = "transparent"
+            onChangeText={text => setTitulo1(text)}
+      >{titulo1}</TextInput>
+      <TextInput
+            placeholder="Local"
+            style = { styles.TextInputStyleLocal }
+            underlineColorAndroid = "transparent"
+            onChangeText = { text => setLocal1(text)}
+      >{local1}</TextInput>
+      <TextInput
+            placeholder="Descricao"
+            style = { styles.TextInputStyleDesc }
+            multiline={true}
+            underlineColorAndroid = "transparent"
+            onChangeText = { text => setDescricao1(text)}
+      >{descricao1}</TextInput>
+
        <View style = { styles.containerBtns }>
-          <TouchableOpacity onPress={this.back}  activeOpacity={0.7} style={styles.button} >
+          <TouchableOpacity onPress={() => navigation.dispatch(StackActions.popToTop())}  activeOpacity={0.7} style={styles.button} >
               <Text style={styles.text}> Voltar </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={this.updateNota} activeOpacity={0.7} style={styles.button} >
+          <TouchableOpacity onPress={updateNota} activeOpacity={0.7} style={styles.button} >
             <Text style={styles.text}> Atualizar </Text>
           </TouchableOpacity>
         </View>
 
-     </View>
-   );
- }
+    </View>
+  );
 
- }
+}
 
  const styles = StyleSheet.create({
     MainContainer: {
