@@ -95,7 +95,8 @@ function EditarNota({ route, navigation }) {
     },
     containerBtns: {
        flexDirection: 'row',
-       marginTop: 30
+       marginTop: 30,
+       justifyContent: 'center'
     },
     button: {
        width: 150,

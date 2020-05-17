@@ -133,6 +133,7 @@ const styles = StyleSheet.create({
     },
     containerBtns: {
        flexDirection: 'row',
+       justifyContent: 'center'
     },
     btn: {
        width: 150,

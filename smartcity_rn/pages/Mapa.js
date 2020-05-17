@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Text, View, Button } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {ActivityIndicator, FlatList, Text, View, Button} from 'react-native';
 
-function Mapa ({ navigation }) {
-
+function Mapa({navigation}) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
@@ -15,24 +14,28 @@ function Mapa ({ navigation }) {
   });
 
   return (
-    <View style={{ flex: 1, padding: 24 }}>
-      {loading ? <ActivityIndicator/> : (
+    <View style={{flex: 1, padding: 24}}>
+      {loading ? (
+        <ActivityIndicator />
+      ) : (
         <FlatList
           data={data}
-          keyExtractor={({ id }, index) => id}
-          renderItem={({ item }) => (
-            <Text>Ti­tulo: {item.title}, Ano: {item.releaseYear}</Text>
+          keyExtractor={({id}, index) => id}
+          renderItem={({item}) => (
+            <Text>
+              Ti­tulo: {item.title}, Ano: {item.releaseYear}
+            </Text>
           )}
         />
       )}
-    <Button
-      style={{ marginTop: 10 }}
-      color="orange"
-      title="Logout"
-      onPress={ () => navigation.navigate('Login')}/>
+      <Button
+        style={{marginTop: 10}}
+        color="orange"
+        title="Logout"
+        onPress={() => navigation.navigate('Login')}
+      />
     </View>
   );
-
-};
+}
 
 export default Mapa;

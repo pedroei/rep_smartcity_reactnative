@@ -25,7 +25,7 @@ const translations = {
     confirmacao_apagar: 'Do you really want to delete this note?',
     sim: 'Yes',
     nao: 'No',
-    apagar: 'Delete'
+    apagar: 'Delete',
   },
 
   pt: {
@@ -51,8 +51,8 @@ const translations = {
     confirmacao_apagar: 'Tem a certeza que pretende apagar esta nota?',
     sim: 'Sim',
     nao: 'Não',
-    apagar: 'Apagar'
-  }
+    apagar: 'Apagar',
+  },
 };
 
 export default new LocalizedStrings(translations);
