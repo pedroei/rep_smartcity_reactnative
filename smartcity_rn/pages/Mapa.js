@@ -1,39 +1,32 @@
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, FlatList, Text, View, Button} from 'react-native';
+import {Text, View} from 'react-native';
 
 function Mapa({navigation}) {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
+  const [nome, setNome] = useState([]);
+  const [email, setEmail] = useState([]);
+  const [password, setpassword] = useState([]);
+  const [msg, setMsg] = useState([]);
 
   useEffect(() => {
-    fetch('https://reactnative.dev/movies.json')
+    const requestOptions = {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({nome: 'oo', email: 'oo', password: 'oo'}),
+    };
+
+    fetch(
+      'https://pedroacm.000webhostapp.com/cm/cm/index.php/api/registar',
+      requestOptions,
+    )
       .then((response) => response.json())
-      .then((json) => setData(json.movies))
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
-  });
+      .then((data) => {
+        setMsg(data.MSG);
+      });
+  }, []);
 
   return (
     <View style={{flex: 1, padding: 24}}>
-      {loading ? (
-        <ActivityIndicator />
-      ) : (
-        <FlatList
-          data={data}
-          keyExtractor={({id}, index) => id}
-          renderItem={({item}) => (
-            <Text>
-              Ti­tulo: {item.title}, Ano: {item.releaseYear}
-            </Text>
-          )}
-        />
-      )}
-      <Button
-        style={{marginTop: 10}}
-        color="orange"
-        title="Logout"
-        onPress={() => navigation.navigate('Login')}
-      />
+      <Text>{msg}</Text>
     </View>
   );
 }

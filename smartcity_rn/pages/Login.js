@@ -118,7 +118,7 @@ function Login({navigation}) {
                   ? styles.textRegistar
                   : styles.textRegistarLand
               }
-              onPress={() => navigation.dispatch(StackActions.replace('Mapa'))}>
+              onPress={() => navigation.navigate('Registar')}>
               {translations.Registar}
             </Text>
           </View>
