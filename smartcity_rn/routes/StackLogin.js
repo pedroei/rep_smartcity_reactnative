@@ -28,7 +28,7 @@ function StackLogin({navigation}) {
         <Stack.Screen
           name="Registar"
           component={Registar}
-          options={{title: 'Registar', headerShown: false}}
+          options={({navigation}) => ({title: 'Registar', headerShown: false})}
         />
         <Stack.Screen
           name="StackLista"

@@ -9,6 +9,7 @@ import {
   ImageBackground,
   Dimensions,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 
 import {StackActions} from '@react-navigation/native';
@@ -28,6 +29,9 @@ function Login({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const [msg, setMsg] = useState('');
+  const [idUser, setIdUser] = useState([]);
+
   const {translations} = useContext(LocalizationContext);
 
   const [dimensions, setDimensions] = useState({window, screen});
@@ -42,6 +46,38 @@ function Login({navigation}) {
       Dimensions.removeEventListener('change', onChange);
     };
   });
+
+  function login() {
+    if (email.trim() === '' || password.trim() === '') {
+      Alert.alert('Preencha todos os campos!');
+    } else {
+      //Alert.alert('Preenchidos!');
+      loginUser();
+    }
+  }
+
+  function loginUser() {
+    const requestOptions = {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({email: email, password: password}),
+    };
+    fetch(
+      'https://pedroacm.000webhostapp.com/cm/cm/index.php/api/login',
+      requestOptions,
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setMsg(data.msg);
+        setIdUser(data.id);
+        if (data.msg === 'success') {
+          Alert.alert('Login!' + data.id);
+          navigation.dispatch(StackActions.replace('Mapa', {id: data.id}));
+        } else {
+          Alert.alert('Email ou Password errados!' + data.id);
+        }
+      });
+  }
 
   return (
     <ImageBackground
@@ -109,7 +145,7 @@ function Login({navigation}) {
                   ? styles.btnLogin
                   : styles.btnLand
               }
-              onPress={() => navigation.dispatch(StackActions.replace('Mapa'))}>
+              onPress={login}>
               <Text style={styles.text}>{translations.Login}</Text>
             </TouchableOpacity>
             <Text
