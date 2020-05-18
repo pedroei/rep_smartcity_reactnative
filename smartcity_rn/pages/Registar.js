@@ -24,6 +24,7 @@ function Registar({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confPassword, setConfPassword] = useState('');
+  const [msg, setMsg] = useState('');
 
   function registar() {
     if (
@@ -37,9 +38,32 @@ function Registar({navigation}) {
       if (password !== confPassword) {
         Alert.alert('As passwords têm de ser iguais!');
       } else {
-        Alert.alert('Tudo preenchido e password correta!');
+        //Alert.alert('Tudo preenchido e password correta!');
+        registarUser();
       }
     }
+  }
+
+  function registarUser() {
+    const requestOptions = {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({nome: nome, email: email, password: password}),
+    };
+    fetch(
+      'https://pedroacm.000webhostapp.com/cm/cm/index.php/api/registar',
+      requestOptions,
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setMsg(data.MSG);
+        if (data.MSG === 'success') {
+          Alert.alert('Registado!');
+          navigation.navigate('Login');
+        } else {
+          Alert.alert(data.MSG);
+        }
+      });
   }
 
   return (
