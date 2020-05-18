@@ -11,9 +11,8 @@ function Mapa({route, navigation}) {
       <Text>{id}</Text>
       <Button
         title="Logout"
-        onPress={() =>
-          navigation.dispatch(StackActions.replace('Login'))
-        }></Button>
+        onPress={() => navigation.dispatch(StackActions.replace('Login'))}
+      />
     </View>
   );
 }
