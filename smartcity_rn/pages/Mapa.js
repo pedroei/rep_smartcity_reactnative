@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -9,12 +9,57 @@ import {
   Image,
 } from 'react-native';
 
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {PROVIDER_GOOGLE, Marker, Callout} from 'react-native-maps';
+import Geolocation from '@react-native-community/geolocation';
 
 import {StackActions} from '@react-navigation/native';
 
 function Mapa({route, navigation}) {
   const {id} = route.params;
+
+  //Serve para a verificacao se o marker esta ativo ou não
+  const estado = 'Resolvido';
+
+  const [error, setError] = useState();
+  const [initialPosition, setInitialPosition] = useState({
+    latitude: 0.0,
+    longitude: 0.0,
+    latitudeDelta: 0.1,
+    longitudeDelta: 0.1,
+  });
+  const [markerPosition, setMarkerPosition] = useState({
+    latitude: 0.0,
+    longitude: 0.0,
+  });
+
+  const handleSuccess = (position) => {
+    var lat = parseFloat(position.coords.latitude);
+    var long = parseFloat(position.coords.longitude);
+
+    var initialRegion = {
+      latitude: lat,
+      longitude: long,
+      latitudeDelta: 0.1,
+      longitudeDelta: 0.1,
+    };
+    setInitialPosition(initialRegion);
+    setMarkerPosition(initialRegion);
+  };
+
+  const handleError = (error) => {
+    setError(error.message);
+  };
+
+  //CORRE UMA VEZ SEMPRE QUE ABRIR ESTE ECRA!
+  useEffect(() => {
+    Geolocation.getCurrentPosition(handleSuccess, handleError);
+  }, []);
+
+  //WATCH
+  useEffect(() => {
+    const watchId = Geolocation.watchPosition(handleSuccess, handleError);
+    return () => Geolocation.clearWatch(watchId);
+  }, []);
 
   function actionButtuon() {
     Alert.alert('Lista de Pontos!');
@@ -23,14 +68,29 @@ function Mapa({route, navigation}) {
   return (
     <View style={styles.container}>
       <MapView
-        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+        provider={PROVIDER_GOOGLE}
         style={styles.map}
-        region={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.015,
-          longitudeDelta: 0.0121,
-        }}></MapView>
+        region={initialPosition}>
+        <Marker
+          key={1} //Trocar a key ao trocar a cor senão a cir nao muda!
+          coordinate={markerPosition}
+          pinColor={estado == 'Ativo' ? 'red' : 'green'}>
+          <Callout
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Text>Titulo</Text>
+            <Text>Descrição</Text>
+            <Text>
+              <Image
+                style={{height: 50, width: 50}}
+                source={require('./../images/city.png')}
+              />
+            </Text>
+          </Callout>
+        </Marker>
+      </MapView>
 
       <TouchableOpacity onPress={actionButtuon} style={styles.btnListaDireita}>
         <Image
