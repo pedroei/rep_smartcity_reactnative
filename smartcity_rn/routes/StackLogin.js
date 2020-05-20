@@ -7,6 +7,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Login from './../pages/Login';
 import Registar from './../pages/Registar';
 import Mapa from './../pages/Mapa';
+import AddProblema from './../pages/AddProblema';
 import StackLista from './../routes/StackLista';
 
 const Stack = createStackNavigator();
@@ -23,6 +24,11 @@ function StackLogin({navigation}) {
         <Stack.Screen
           name="Mapa"
           component={Mapa}
+          options={{title: 'SmartCity', headerShown: false}}
+        />
+        <Stack.Screen
+          name="AddProblema"
+          component={AddProblema}
           options={{title: 'SmartCity', headerShown: false}}
         />
         <Stack.Screen
