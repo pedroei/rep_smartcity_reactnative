@@ -14,11 +14,17 @@ import Geolocation from '@react-native-community/geolocation';
 
 import {StackActions} from '@react-navigation/native';
 
+let markersURL =
+  'https://pedroacm.000webhostapp.com/cm/cm/index.php/api/problemas';
+
 function Mapa({route, navigation}) {
   const {id} = route.params;
 
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+
   //Serve para a verificacao se o marker esta ativo ou não
-  const estado = 'Resolvido';
+  //const estado = 'Resolvido';
 
   const [error, setError] = useState();
   const [initialPosition, setInitialPosition] = useState({
@@ -27,10 +33,10 @@ function Mapa({route, navigation}) {
     latitudeDelta: 0.1,
     longitudeDelta: 0.1,
   });
-  const [markerPosition, setMarkerPosition] = useState({
+  /*const [markerPosition, setMarkerPosition] = useState({
     latitude: 0.0,
     longitude: 0.0,
-  });
+  });*/
 
   const handleSuccess = (position) => {
     var lat = parseFloat(position.coords.latitude);
@@ -39,11 +45,11 @@ function Mapa({route, navigation}) {
     var initialRegion = {
       latitude: lat,
       longitude: long,
-      latitudeDelta: 0.1,
-      longitudeDelta: 0.1,
+      latitudeDelta: 0.015,
+      longitudeDelta: 0.015,
     };
     setInitialPosition(initialRegion);
-    setMarkerPosition(initialRegion);
+    //setMarkerPosition(initialRegion);
   };
 
   const handleError = (error) => {
@@ -61,6 +67,17 @@ function Mapa({route, navigation}) {
     return () => Geolocation.clearWatch(watchId);
   }, []);
 
+  //Markers do webservice
+  useEffect(() => {
+    fetch(markersURL)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setLoading(false), setData(responseJson.DATA);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+  // É preciso o [] para que o webservice rode uma vez ao começar, senão excedo o limite de queries do 000webhost
+
   function actionButtuon() {
     Alert.alert('Lista de Pontos!');
   }
@@ -71,25 +88,29 @@ function Mapa({route, navigation}) {
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         region={initialPosition}>
-        <Marker
-          key={1} //Trocar a key ao trocar a cor senão a cir nao muda!
-          coordinate={markerPosition}
-          pinColor={estado == 'Ativo' ? 'red' : 'green'}>
-          <Callout
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Text>Titulo</Text>
-            <Text>Descrição</Text>
-            <Text>
-              <Image
-                style={{height: 50, width: 50}}
-                source={require('./../images/city.png')}
-              />
-            </Text>
-          </Callout>
-        </Marker>
+        {data.map((marker) => (
+          <Marker
+            key={marker.id} //Trocar a key ao trocar a cor senão a cir nao muda!
+            coordinate={{
+              latitude: parseFloat(marker.latitude),
+              longitude: parseFloat(marker.longitude),
+            }}
+            pinColor={marker.estado == 'Ativo' ? 'red' : 'green'}>
+            <Callout
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text>{marker.titulo}</Text>
+              <Text>
+                <Image
+                  style={{height: 50, width: 50}}
+                  source={require('./../images/city.png')}
+                />
+              </Text>
+            </Callout>
+          </Marker>
+        ))}
       </MapView>
 
       <TouchableOpacity onPress={actionButtuon} style={styles.btnListaDireita}>
