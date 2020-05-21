@@ -4,10 +4,43 @@ import {Text, View, Button, Alert, TextInput} from 'react-native';
 function AddProblema({route, navigation}) {
   const {id, lat, long} = route.params;
 
-  const [nome, setNome] = useState([]);
-  const [email, setEmail] = useState([]);
-  const [password, setpassword] = useState([]);
+  const [titulo, setTitulo] = useState([]);
+  const [descricao, setDescricao] = useState([]);
+  const [imagem, setImagem] = useState([]);
   const [msg, setMsg] = useState([]);
+
+  function addProblem() {
+    var day = new Date().getDate(); //Current Date
+    var month = new Date().getMonth() + 1; //Current Month
+    var year = new Date().getFullYear(); //Current Year
+    //var hours = new Date().getHours(); //Current Hours
+    //var min = new Date().getMinutes(); //Current Minutes
+    //var sec = new Date().getSeconds(); //Current Seconds
+
+    var data = day + '/' + month + '/' + year;
+    var estado = 'Ativo';
+    console.log(
+      titulo +
+        ' ' +
+        descricao +
+        ' ' +
+        imagem +
+        ' ' +
+        lat +
+        ' ' +
+        long +
+        ' ' +
+        id +
+        ' ' +
+        data +
+        ' ' +
+        estado,
+    );
+  }
+
+  function pickPhoto() {
+    Alert.alert('Tirar foto!');
+  }
 
   function registar() {
     const requestOptions = {
@@ -32,17 +65,21 @@ function AddProblema({route, navigation}) {
 
   return (
     <View style={{flex: 1, padding: 24}}>
-      <Text style={{fontSize: 24}}>{id}</Text>
-      <Text style={{fontSize: 24}}>{lat}</Text>
-      <Text style={{fontSize: 24}}>{long}</Text>
-      <TextInput placeholder="Nome" onChangeText={(text) => setNome(text)} />
-      <TextInput placeholder="Email" onChangeText={(text) => setEmail(text)} />
       <TextInput
-        placeholder="Password"
-        onChangeText={(text) => setpassword(text)}
+        placeholder="Titulo"
+        onChangeText={(text) => setTitulo(text)}
       />
-      <Button title="registar" onPress={registar}></Button>
+      <TextInput
+        placeholder="Descricao"
+        onChangeText={(text) => setDescricao(text)}
+      />
+      <Button title="Tirar Foto" onPress={pickPhoto}></Button>
+      <Button title="Adicionar problema" onPress={addProblem}></Button>
       <Text>{msg}</Text>
+
+      <Text style={{fontSize: 10, marginTop: 100}}>{id}</Text>
+      <Text style={{fontSize: 10}}>{lat}</Text>
+      <Text style={{fontSize: 10}}>{long}</Text>
     </View>
   );
 }
