@@ -6,7 +6,7 @@ function AddProblema({route, navigation}) {
 
   const [titulo, setTitulo] = useState([]);
   const [descricao, setDescricao] = useState([]);
-  const [imagem, setImagem] = useState([]);
+  const [imagem, setImagem] = useState('');
   const [msg, setMsg] = useState([]);
 
   function addProblem() {
@@ -40,27 +40,6 @@ function AddProblema({route, navigation}) {
 
   function pickPhoto() {
     Alert.alert('Tirar foto!');
-  }
-
-  function registar() {
-    const requestOptions = {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({nome: nome, email: email, password: password}),
-    };
-    fetch(
-      'https://pedroacm.000webhostapp.com/cm/cm/index.php/api/registar',
-      requestOptions,
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setMsg(data.MSG);
-        if (data.MSG === 'success') {
-          Alert.alert('Registado!');
-        } else {
-          Alert.alert(data.MSG);
-        }
-      });
   }
 
   return (
