@@ -79,6 +79,8 @@ target 'smartcity_rn' do
 
   pod 'RealmJS', :path => '../node_modules/realm'
 
+  pod 'RNImageCropPicker', :path => '../node_modules/react-native-image-crop-picker'
+
   target 'smartcity_rnTests' do
     inherit! :complete
     # Pods for testing

@@ -1,13 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View, Button, Alert, TextInput} from 'react-native';
+import {Text, View, Button, Alert, TextInput, Image} from 'react-native';
+
+import ImagePicker from 'react-native-image-crop-picker';
 
 function AddProblema({route, navigation}) {
   const {id, lat, long} = route.params;
 
   const [titulo, setTitulo] = useState([]);
   const [descricao, setDescricao] = useState([]);
-  const [imagem, setImagem] = useState('');
+  //const [imagem, setImagem] = useState('');
   const [msg, setMsg] = useState([]);
+  const [img, setImg] = useState([]);
 
   function addProblem() {
     var day = new Date().getDate(); //Current Date
@@ -39,7 +42,16 @@ function AddProblema({route, navigation}) {
   }
 
   function pickPhoto() {
-    Alert.alert('Tirar foto!');
+    //Alert.alert('Tirar foto!');
+    ImagePicker.openCamera({
+      width: 300,
+      height: 400,
+      cropping: true,
+      includeBase64: true,
+    }).then((image) => {
+      setImg(image);
+      console.log(image);
+    });
   }
 
   return (
@@ -54,6 +66,15 @@ function AddProblema({route, navigation}) {
       />
       <Button title="Tirar Foto" onPress={pickPhoto}></Button>
       <Button title="Adicionar problema" onPress={addProblem}></Button>
+      <Image
+        style={{
+          width: 200,
+          height: 200,
+          borderWidth: 1,
+          borderColor: 'red',
+        }}
+        source={{uri: `data:${img.mime};base64,${img.data}`}}
+      />
       <Text>{msg}</Text>
 
       <Text style={{fontSize: 10, marginTop: 100}}>{id}</Text>
