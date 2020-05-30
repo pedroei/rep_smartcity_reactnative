@@ -1,44 +1,24 @@
 import React, {useEffect, useState} from 'react';
 import {Text, View, Button, Alert, TextInput, Image} from 'react-native';
+import {StackActions} from '@react-navigation/native';
 
 import ImagePicker from 'react-native-image-crop-picker';
 
 function AddProblema({route, navigation}) {
   const {id, lat, long} = route.params;
 
-  const [titulo, setTitulo] = useState([]);
-  const [descricao, setDescricao] = useState([]);
-  //const [imagem, setImagem] = useState('');
-  const [msg, setMsg] = useState([]);
+  const [titulo, setTitulo] = useState('');
+  const [descricao, setDescricao] = useState('');
   const [img, setImg] = useState([]);
+  const [imgb64, setImgb64] = useState('');
+  const [msg, setMsg] = useState([]);
 
   function addProblem() {
-    var day = new Date().getDate(); //Current Date
-    var month = new Date().getMonth() + 1; //Current Month
-    var year = new Date().getFullYear(); //Current Year
-    //var hours = new Date().getHours(); //Current Hours
-    //var min = new Date().getMinutes(); //Current Minutes
-    //var sec = new Date().getSeconds(); //Current Seconds
-
-    var data = day + '/' + month + '/' + year;
-    var estado = 'Ativo';
-    console.log(
-      titulo +
-        ' ' +
-        descricao +
-        ' ' +
-        imagem +
-        ' ' +
-        lat +
-        ' ' +
-        long +
-        ' ' +
-        id +
-        ' ' +
-        data +
-        ' ' +
-        estado,
-    );
+    if (titulo.trim() === '' || descricao.trim() === '' || img === '') {
+      Alert.alert('Preencha todos os campos!');
+    } else {
+      addProbWS();
+    }
   }
 
   function pickPhoto() {
@@ -50,8 +30,68 @@ function AddProblema({route, navigation}) {
       includeBase64: true,
     }).then((image) => {
       setImg(image);
-      console.log(image);
+      setImgb64(image.data);
+      //console.log(image);
     });
+  }
+
+  function addProbWS() {
+    var day = new Date().getDate(); //Current Date
+    var month = new Date().getMonth() + 1; //Current Month
+    var year = new Date().getFullYear(); //Current Year
+
+    var imgEnviar = `data:${img.mime};base64,${img.data}`;
+
+    var date = day + '/' + month + '/' + year;
+    var estado = 'Ativo';
+
+    const requestOptions = {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        titulo: titulo,
+        descricao: descricao,
+        imagem: img,
+        latitude: lat,
+        longitude: long,
+        estado: estado,
+        data: date,
+        id_utilizador: id,
+      }),
+    };
+    fetch(
+      'https://pedroacm.000webhostapp.com/cm/cm/index.php/api/problema',
+      requestOptions,
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setMsg(data.MSG);
+        if (data.status === true) {
+          Alert.alert('Problema Adicionado!');
+          navigation.dispatch(StackActions.replace('Mapa', {id: data.id}));
+        } else {
+          Alert.alert('Erro ao adicionar! ' + data.MSG);
+        }
+      });
+
+    /*
+    console.log(
+      titulo +
+        ' ' +
+        descricao +
+        ' ' +
+        imgEnviar +
+        ' ' +
+        lat +
+        ' ' +
+        long +
+        ' ' +
+        id +
+        ' ' +
+        data +
+        ' ' +
+        estado,
+    );*/
   }
 
   return (
