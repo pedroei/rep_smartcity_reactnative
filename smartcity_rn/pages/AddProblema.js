@@ -51,7 +51,7 @@ function AddProblema({route, navigation}) {
       body: JSON.stringify({
         titulo: titulo,
         descricao: descricao,
-        imagem: img,
+        imagem: imgEnviar,
         latitude: lat,
         longitude: long,
         estado: estado,

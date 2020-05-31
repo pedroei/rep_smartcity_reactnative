@@ -72,7 +72,12 @@ function Login({navigation}) {
         setIdUser(data.id);
         if (data.msg === 'success') {
           Alert.alert('Login!' + data.id);
-          navigation.dispatch(StackActions.replace('Mapa', {id: data.id}));
+          navigation.dispatch(
+            StackActions.replace('StackMapa', {
+              screen: 'Mapa',
+              params: {id: data.id},
+            }),
+          );
         } else {
           Alert.alert('Email ou Password errados!' + data.id);
         }
