@@ -84,7 +84,8 @@ function Mapa({route, navigation}) {
   // É preciso o [] para que o webservice rode uma vez ao começar, senão excedo o limite de queries do 000webhost
 
   function actionButtuon() {
-    Alert.alert('Lista de Pontos!');
+    //Alert.alert('Lista de Pontos!');
+    navigation.navigate('ListaPontosUser', {id: id});
   }
 
   return (
@@ -112,9 +113,10 @@ function Mapa({route, navigation}) {
               <Text>
                 <Image
                   style={{
-                    height: 75,
-                    width: 75,
+                    height: 100,
+                    width: 80,
                     resizeMode: 'cover',
+                    backgroundColor: 'red',
                   }}
                   source={{
                     uri: marker.imagem,
