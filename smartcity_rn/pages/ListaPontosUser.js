@@ -33,6 +33,14 @@ function ListaPontosUser({route, navigation}) {
       ) : (
         <FlatList
           data={data}
+          ItemSeparatorComponent={() => (
+            <View
+              style={{
+                height: 1,
+                width: '100%',
+                backgroundColor: 'rgba(0, 0, 0, 0.2)',
+              }}></View>
+          )}
           keyExtractor={({id}, index) => id}
           renderItem={({item}) => (
             <View>

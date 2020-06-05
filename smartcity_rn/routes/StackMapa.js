@@ -25,7 +25,7 @@ function StackMapa({navigation}) {
       <Stack.Screen
         name="AddProblema"
         component={AddProblema}
-        options={{title: 'SmartCity', headerShown: false}}
+        options={{title: 'SmartCity'}}
       />
       <Stack.Screen
         name="ListaPontosUser"

@@ -17,6 +17,8 @@ import {LocalizationContext} from './../services/localization/LocalizationContex
 import bg from './../images/backgound.jpg';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
+const window = Dimensions.get('window');
+const screen = Dimensions.get('screen');
 const {width: WIDTH} = Dimensions.get('window');
 
 function Registar({navigation}) {
@@ -25,6 +27,19 @@ function Registar({navigation}) {
   const [password, setPassword] = useState('');
   const [confPassword, setConfPassword] = useState('');
   const [msg, setMsg] = useState('');
+
+  const [dimensions, setDimensions] = useState({window, screen});
+
+  const onChange = ({window, screen}) => {
+    setDimensions({window, screen});
+  };
+
+  useEffect(() => {
+    Dimensions.addEventListener('change', onChange);
+    return () => {
+      Dimensions.removeEventListener('change', onChange);
+    };
+  });
 
   function registar() {
     if (
@@ -113,7 +128,12 @@ function Registar({navigation}) {
           />
         </View>
 
-        <View style={styles.containerBtns}>
+        <View
+          style={
+            dimensions.window.height > dimensions.window.width
+              ? styles.containerBtns
+              : styles.containerBtnsLand
+          }>
           <TouchableOpacity
             style={styles.btn}
             onPress={() => navigation.navigate('Login')}>

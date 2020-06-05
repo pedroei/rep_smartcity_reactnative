@@ -1,17 +1,43 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View, Button, Alert, TextInput, Image} from 'react-native';
+import {
+  Text,
+  View,
+  Button,
+  Alert,
+  TextInput,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
 import {StackActions} from '@react-navigation/native';
 
 import ImagePicker from 'react-native-image-crop-picker';
 
+const window = Dimensions.get('window');
+const screen = Dimensions.get('screen');
+
 function AddProblema({route, navigation}) {
   const {id, lat, long} = route.params;
+
+  const [dimensions, setDimensions] = useState({window, screen});
 
   const [titulo, setTitulo] = useState('');
   const [descricao, setDescricao] = useState('');
   const [img, setImg] = useState([]);
   const [imgb64, setImgb64] = useState('');
   const [msg, setMsg] = useState([]);
+
+  const onChange = ({window, screen}) => {
+    setDimensions({window, screen});
+  };
+
+  useEffect(() => {
+    Dimensions.addEventListener('change', onChange);
+    return () => {
+      Dimensions.removeEventListener('change', onChange);
+    };
+  });
 
   function addProblem() {
     if (titulo.trim() === '' || descricao.trim() === '' || img === '') {
@@ -73,55 +99,146 @@ function AddProblema({route, navigation}) {
           Alert.alert('Erro ao adicionar! ' + data.MSG);
         }
       });
-
-    /*
-    console.log(
-      titulo +
-        ' ' +
-        descricao +
-        ' ' +
-        imgEnviar +
-        ' ' +
-        lat +
-        ' ' +
-        long +
-        ' ' +
-        id +
-        ' ' +
-        data +
-        ' ' +
-        estado,
-    );*/
   }
 
   return (
-    <View style={{flex: 1, padding: 24}}>
+    <View style={styles.MainContainer}>
       <TextInput
         placeholder="Titulo"
+        style={styles.TextInputStyleTitulo}
+        underlineColorAndroid="transparent"
         onChangeText={(text) => setTitulo(text)}
       />
       <TextInput
         placeholder="Descricao"
+        style={
+          dimensions.window.height > dimensions.window.width
+            ? styles.TextInputStyleDesc
+            : styles.TextInputStyleDescLand
+        }
+        multiline={true}
+        underlineColorAndroid="transparent"
         onChangeText={(text) => setDescricao(text)}
       />
-      <Button title="Tirar Foto" onPress={pickPhoto}></Button>
-      <Button title="Adicionar problema" onPress={addProblem}></Button>
-      <Image
-        style={{
-          width: 200,
-          height: 200,
-          borderWidth: 1,
-          borderColor: 'red',
-        }}
-        source={{uri: `data:${img.mime};base64,${img.data}`}}
-      />
-      <Text>{msg}</Text>
+      <View
+        style={
+          dimensions.window.height > dimensions.window.width
+            ? styles.containerVazio
+            : styles.containerLand
+        }>
+        <View style={styles.containerImg}>
+          <Image
+            style={
+              dimensions.window.height > dimensions.window.width
+                ? styles.imagemStyle
+                : styles.imagemStyleLand
+            }
+            source={{uri: `data:${img.mime};base64,${img.data}`}}
+          />
+        </View>
+        <View
+          style={
+            dimensions.window.height > dimensions.window.width
+              ? styles.containerBtns
+              : styles.containerBtnsLand
+          }>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles.button}
+            onPress={pickPhoto}>
+            <Text style={styles.text}>Tirar Foto</Text>
+          </TouchableOpacity>
 
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles.button}
+            onPress={addProblem}>
+            <Text style={styles.text}>Adicionar problema</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      {/*<Text>{msg}</Text>
       <Text style={{fontSize: 10, marginTop: 100}}>{id}</Text>
       <Text style={{fontSize: 10}}>{lat}</Text>
-      <Text style={{fontSize: 10}}>{long}</Text>
+      <Text style={{fontSize: 10}}>{long}</Text> */}
     </View>
   );
 }
 
+const styles = StyleSheet.create({
+  MainContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  containerBtns: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  containerBtnsLand: {
+    marginLeft: 60,
+  },
+  button: {
+    width: 150,
+    padding: 10,
+    borderRadius: 25,
+    margin: 12,
+    marginTop: 0,
+    backgroundColor: 'rgba(72,61,139, 0.8)',
+  },
+  text: {
+    color: 'white',
+    fontSize: 15,
+    textAlign: 'center',
+  },
+  TextInputStyleTitulo: {
+    borderWidth: 1,
+    margin: 10,
+    borderColor: '#000',
+    height: 40,
+    borderRadius: 15,
+    marginBottom: 15,
+    textAlign: 'left',
+    marginLeft: 10,
+    marginTop: 20,
+  },
+  TextInputStyleDesc: {
+    height: 200,
+    borderWidth: 1,
+    margin: 10,
+    borderColor: '#000',
+    borderRadius: 15,
+    marginBottom: 10,
+    textAlignVertical: 'top',
+  },
+  TextInputStyleDescLand: {
+    height: 50,
+    borderWidth: 1,
+    margin: 10,
+    borderColor: '#000',
+    borderRadius: 15,
+    marginBottom: 0,
+    textAlignVertical: 'top',
+  },
+  containerImg: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  imagemStyle: {
+    width: 200,
+    height: 150,
+    marginTop: 0,
+    marginBottom: 10,
+  },
+  imagemStyleLand: {
+    width: 150,
+    height: 110,
+  },
+  containerVazio: {},
+  containerLand: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
 export default AddProblema;

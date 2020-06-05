@@ -85,7 +85,8 @@ function Mapa({route, navigation}) {
 
   function actionButtuon() {
     //Alert.alert('Lista de Pontos!');
-    navigation.navigate('ListaPontosUser', {id: id});
+    //navigation.navigate('ListaPontosUser', {id: id});
+    navigation.dispatch(StackActions.replace('ListaPontosUser', {id: id}));
   }
 
   return (
