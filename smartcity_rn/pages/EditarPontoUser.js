@@ -27,7 +27,7 @@ function EditarPontoUser({route, navigation}) {
   const {translations} = useContext(LocalizationContext);
   const [dimensions, setDimensions] = useState({window, screen});
 
-  const {id_utilizador, titulo, descricao, estado} = route.params;
+  const {id, id_utilizador, titulo, descricao, estado} = route.params;
 
   const [titulo1, setTitulo1] = useState(titulo);
   const [descricao1, setDescricao1] = useState(descricao);
@@ -48,11 +48,37 @@ function EditarPontoUser({route, navigation}) {
     if (titulo1.trim() === '' || descricao1.trim() === '') {
       Alert.alert('Preencha todos os campos');
     } else {
-      Alert.alert('Editar!');
-      /*navigation.dispatch(
-        StackActions.replace('ListaPontosUser', {id: id_utilizador}),
+      editarPonto();
+      /*
       );*/
     }
+  }
+
+  function editarPonto() {
+    const requestOptions = {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        id: id,
+        titulo: titulo1,
+        descricao: descricao1,
+      }),
+    };
+    fetch(
+      'https://pedroacm.000webhostapp.com/cm/cm/index.php/api/editarP',
+      requestOptions,
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === true) {
+          Alert.alert('Problema Editado!');
+          navigation.dispatch(
+            StackActions.replace('ListaPontosUser', {id: id_utilizador}),
+          );
+        } else {
+          Alert.alert('Erro ao editar! ' + data.msg);
+        }
+      });
   }
 
   return (
