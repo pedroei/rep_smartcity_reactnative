@@ -30,7 +30,7 @@ function StackMapa({navigation}) {
       <Stack.Screen
         name="ListaPontosUser"
         component={ListaPontosUser}
-        options={{title: 'SmartCity', headerShown: false}}
+        options={{title: 'Pontos do Utilizador', headerLeft: null}}
       />
     </Stack.Navigator>
   );
