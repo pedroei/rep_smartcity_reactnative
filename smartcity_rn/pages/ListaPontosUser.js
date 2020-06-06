@@ -96,6 +96,39 @@ function ListaPontosUser({route, navigation}) {
     navigation.navigate('EditarPontoUser', item);
   }
 
+  function alterarEstado(item) {
+    let novoEstado;
+    if (item.estado == 'Ativo') {
+      novoEstado = 'Resolvido';
+    } else {
+      novoEstado = 'Ativo';
+    }
+
+    const requestOptions = {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        id: item.id,
+        estado: novoEstado,
+      }),
+    };
+    fetch(
+      'https://pedroacm.000webhostapp.com/cm/cm/index.php/api/estado',
+      requestOptions,
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === true) {
+          Alert.alert('Estado Alterado!');
+          navigation.dispatch(
+            StackActions.replace('ListaPontosUser', {id: id}),
+          );
+        } else {
+          Alert.alert('Erro ao editar estado! ' + data.msg);
+        }
+      });
+  }
+
   return (
     <View style={styles.MainContainer}>
       {isLoading ? (
@@ -127,7 +160,12 @@ function ListaPontosUser({route, navigation}) {
                     {item.descricao}
                   </Text>
                   <Text
-                    style={{fontSize: 17, marginTop: 5, textAlign: 'right'}}>
+                    style={
+                      item.estado == 'Ativo'
+                        ? styles.txtEstadoAtivo
+                        : styles.txtEstadoResolvido
+                    }
+                    onPress={() => alterarEstado(item)}>
                     {item.estado}
                   </Text>
                 </View>
@@ -182,5 +220,17 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     textAlign: 'center',
+  },
+  txtEstadoAtivo: {
+    fontSize: 18,
+    marginTop: 5,
+    textAlign: 'right',
+    color: 'red',
+  },
+  txtEstadoResolvido: {
+    fontSize: 18,
+    marginTop: 5,
+    textAlign: 'right',
+    color: 'green',
   },
 });
