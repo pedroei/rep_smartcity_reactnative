@@ -65,7 +65,28 @@ function ListaPontosUser({route, navigation}) {
       {
         text: 'Sim',
         onPress: () => {
-          console.log('Apagar');
+          const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              id: item.id,
+            }),
+          };
+          fetch(
+            'https://pedroacm.000webhostapp.com/cm/cm/index.php/api/delete',
+            requestOptions,
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.status === true) {
+                Alert.alert('Problema Apagado!');
+                navigation.dispatch(
+                  StackActions.replace('ListaPontosUser', {id: id}),
+                );
+              } else {
+                Alert.alert('Erro ao apagar! ' + data.MSG);
+              }
+            });
         },
       },
     ]);
