@@ -9,6 +9,7 @@ import {LocalizationContext} from './../services/localization/LocalizationContex
 import Mapa from './../pages/Mapa';
 import AddProblema from './../pages/AddProblema';
 import ListaPontosUser from './../pages/ListaPontosUser';
+import EditarPontoUser from './../pages/EditarPontoUser';
 
 const Stack = createStackNavigator();
 
@@ -31,6 +32,11 @@ function StackMapa({navigation}) {
         name="ListaPontosUser"
         component={ListaPontosUser}
         options={{title: 'Pontos do Utilizador', headerLeft: null}}
+      />
+      <Stack.Screen
+        name="EditarPontoUser"
+        component={EditarPontoUser}
+        options={{title: 'Pontos do Utilizador'}}
       />
     </Stack.Navigator>
   );

@@ -72,8 +72,7 @@ function ListaPontosUser({route, navigation}) {
   }
 
   function editarProblema(item, navigation) {
-    //navigation.navigate('EditarNota', item);
-    console.log('Editar!');
+    navigation.navigate('EditarPontoUser', item);
   }
 
   return (
