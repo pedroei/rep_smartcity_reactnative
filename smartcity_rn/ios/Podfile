@@ -81,6 +81,8 @@ target 'smartcity_rn' do
 
   pod 'RNImageCropPicker', :path => '../node_modules/react-native-image-crop-picker'
 
+  pod 'RNSensors', :path => '../node_modules/react-native-sensors'
+
   target 'smartcity_rnTests' do
     inherit! :complete
     # Pods for testing

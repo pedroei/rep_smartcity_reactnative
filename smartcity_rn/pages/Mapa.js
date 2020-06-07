@@ -15,6 +15,9 @@ import Geolocation from '@react-native-community/geolocation';
 
 import {StackActions} from '@react-navigation/native';
 
+import {accelerometer} from 'react-native-sensors';
+import {map, filter} from 'rxjs/operators';
+
 let markersURL =
   'https://pedroacm.000webhostapp.com/cm/cm/index.php/api/problemas';
 
@@ -25,9 +28,33 @@ function Mapa({route, navigation}) {
   const [data, setData] = useState([]);
   const [addLat, setAddLat] = useState('');
   const [addLong, setAddLong] = useState('');
+  const [tipoMapa, setTipoMapa] = useState('standard');
 
-  //Serve para a verificacao se o marker esta ativo ou não
-  //const estado = 'Resolvido';
+  //Sensores
+  const subscription = accelerometer
+    .pipe(
+      map(({x, y, z}) => x + y + z),
+      filter((speed) => speed > 20),
+    )
+    .subscribe(
+      (speed) => atuzalizarSensores(),
+      (error) => {
+        console.log('The sensor is not available');
+      },
+    );
+
+  function atuzalizarSensores() {
+    /*
+    //Esta função é chamada demasiadas vezes por isso o tipo de mapa fica sempre a trocar
+    if (tipoMapa == 'standard') {
+      console.log('Ativas sensor');
+      setTipoMapa('satellite');
+    } else {
+      console.log('Ativas sensor');
+      setTipoMapa('standard');
+    }*/
+    setTipoMapa('satellite');
+  }
 
   const [error, setError] = useState();
   const [initialPosition, setInitialPosition] = useState({
@@ -36,10 +63,6 @@ function Mapa({route, navigation}) {
     latitudeDelta: 0.1,
     longitudeDelta: 0.1,
   });
-  /*const [markerPosition, setMarkerPosition] = useState({
-    latitude: 0.0,
-    longitude: 0.0,
-  });*/
 
   const handleSuccess = (position) => {
     var lat = parseFloat(position.coords.latitude);
@@ -94,6 +117,7 @@ function Mapa({route, navigation}) {
       <MapView
         provider={PROVIDER_GOOGLE}
         style={styles.map}
+        mapType={tipoMapa}
         region={initialPosition}>
         {data.map((marker) => (
           <Marker
@@ -158,10 +182,6 @@ function Mapa({route, navigation}) {
           style={styles.FloatingButtonStyle}
         />
       </TouchableOpacity>
-
-      {/*<Text style={{fontSize: 24}}>{id}</Text>
-      <Text style={{fontSize: 24}}>{addLat}</Text>
-      <Text style={{fontSize: 24}}>{addLong}</Text>*/}
     </View>
   );
 }
