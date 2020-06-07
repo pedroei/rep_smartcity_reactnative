@@ -49,7 +49,7 @@ function Login({navigation}) {
 
   function login() {
     if (email.trim() === '' || password.trim() === '') {
-      Alert.alert('Preencha todos os campos!');
+      Alert.alert(translations.preencher);
     } else {
       //Alert.alert('Preenchidos!');
       loginUser();
@@ -71,7 +71,7 @@ function Login({navigation}) {
         setMsg(data.msg);
         setIdUser(data.id);
         if (data.msg === 'success') {
-          Alert.alert('Login!' + data.id);
+          Alert.alert('Login!' + ' ' + data.id);
           navigation.dispatch(
             StackActions.replace('StackMapa', {
               screen: 'Mapa',
@@ -79,7 +79,7 @@ function Login({navigation}) {
             }),
           );
         } else {
-          Alert.alert('Email ou Password errados!' + data.id);
+          Alert.alert(translations.errados + ' ' + data.id);
         }
       });
   }

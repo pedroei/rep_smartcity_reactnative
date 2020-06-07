@@ -106,12 +106,6 @@ function Mapa({route, navigation}) {
   }, []);
   // É preciso o [] para que o webservice rode uma vez ao começar, senão excedo o limite de queries do 000webhost
 
-  function actionButtuon() {
-    //Alert.alert('Lista de Pontos!');
-    //navigation.navigate('ListaPontosUser', {id: id});
-    navigation.dispatch(StackActions.replace('ListaPontosUser', {id: id}));
-  }
-
   return (
     <View style={styles.container}>
       <MapView
@@ -153,7 +147,11 @@ function Mapa({route, navigation}) {
         ))}
       </MapView>
 
-      <TouchableOpacity onPress={actionButtuon} style={styles.btnListaDireita}>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.dispatch(StackActions.replace('ListaPontosUser', {id: id}))
+        }
+        style={styles.btnListaDireita}>
         <Image
           source={require('./../images/list.png')}
           style={styles.FloatingButtonStyle}

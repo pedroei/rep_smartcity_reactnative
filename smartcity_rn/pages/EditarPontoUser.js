@@ -46,7 +46,7 @@ function EditarPontoUser({route, navigation}) {
 
   function updatePonto() {
     if (titulo1.trim() === '' || descricao1.trim() === '') {
-      Alert.alert('Preencha todos os campos');
+      Alert.alert(translations.preencher);
     } else {
       editarPonto();
       /*
@@ -71,12 +71,12 @@ function EditarPontoUser({route, navigation}) {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === true) {
-          Alert.alert('Problema Editado!');
+          Alert.alert(translations.editProblema);
           navigation.dispatch(
             StackActions.replace('ListaPontosUser', {id: id_utilizador}),
           );
         } else {
-          Alert.alert('Erro ao editar! ' + data.msg);
+          Alert.alert(translations.editProblemaErro + data.msg);
         }
       });
   }
@@ -84,14 +84,14 @@ function EditarPontoUser({route, navigation}) {
   return (
     <View style={styles.MainContainer}>
       <TextInput
-        placeholder="Titulo"
+        placeholder={translations.titulo}
         style={styles.TextInputStyleTitulo}
         underlineColorAndroid="transparent"
         onChangeText={(text) => setTitulo1(text)}>
         {titulo1}
       </TextInput>
       <TextInput
-        placeholder="Descricao"
+        placeholder={translations.descricao}
         style={
           dimensions.window.height > dimensions.window.width
             ? styles.TextInputStyleDesc

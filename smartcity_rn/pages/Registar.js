@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   StyleSheet,
   View,
@@ -28,6 +28,7 @@ function Registar({navigation}) {
   const [confPassword, setConfPassword] = useState('');
   const [msg, setMsg] = useState('');
 
+  const {translations} = useContext(LocalizationContext);
   const [dimensions, setDimensions] = useState({window, screen});
 
   const onChange = ({window, screen}) => {
@@ -48,10 +49,10 @@ function Registar({navigation}) {
       password.trim() === '' ||
       confPassword.trim() === ''
     ) {
-      Alert.alert('Preencha todos os campos!');
+      Alert.alert(translations.preencher);
     } else {
       if (password !== confPassword) {
-        Alert.alert('As passwords têm de ser iguais!');
+        Alert.alert(translations.passwordsIguais);
       } else {
         //Alert.alert('Tudo preenchido e password correta!');
         registarUser();
@@ -73,7 +74,7 @@ function Registar({navigation}) {
       .then((data) => {
         setMsg(data.MSG);
         if (data.MSG === 'success') {
-          Alert.alert('Registado!');
+          Alert.alert(translations.registado);
           navigation.navigate('Login');
         } else {
           Alert.alert(data.MSG);
@@ -84,14 +85,14 @@ function Registar({navigation}) {
   return (
     <ImageBackground source={bg} style={styles.backgroundContainer}>
       <View style={styles.logoContainer}>
-        <Text style={styles.logoText}>Registar</Text>
+        <Text style={styles.logoText}>{translations.Registar}</Text>
       </View>
 
       <View>
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
-            placeholder="Nome"
+            placeholder={translations.nome}
             placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
             underlineColorAndroid="transparent"
             onChangeText={(text) => setNome(text)}
@@ -100,7 +101,7 @@ function Registar({navigation}) {
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
-            placeholder="Email"
+            placeholder={translations.Email}
             placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
             underlineColorAndroid="transparent"
             onChangeText={(text) => setEmail(text)}
@@ -110,7 +111,7 @@ function Registar({navigation}) {
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
-            placeholder="Password"
+            placeholder={translations.Password}
             secureTextEntry={true}
             placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
             underlineColorAndroid="transparent"
@@ -120,7 +121,7 @@ function Registar({navigation}) {
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
-            placeholder="Confirmar Password"
+            placeholder={translations.confPassword}
             secureTextEntry={true}
             placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
             underlineColorAndroid="transparent"
@@ -137,10 +138,10 @@ function Registar({navigation}) {
           <TouchableOpacity
             style={styles.btn}
             onPress={() => navigation.navigate('Login')}>
-            <Text style={styles.text}>Voltar</Text>
+            <Text style={styles.text}>{translations.voltar}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.btn} onPress={registar}>
-            <Text style={styles.text}>Registar</Text>
+            <Text style={styles.text}>{translations.Registar}</Text>
           </TouchableOpacity>
         </View>
       </View>

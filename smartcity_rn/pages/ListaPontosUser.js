@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -14,11 +14,14 @@ import {
 
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import {StackActions} from '@react-navigation/native';
+import {LocalizationContext} from './../services/localization/LocalizationContext';
 
 function ListaPontosUser({route, navigation}) {
   const {id} = route.params;
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+
+  const {translations} = useContext(LocalizationContext);
 
   useEffect(() => {
     const requestOptions = {
@@ -49,21 +52,21 @@ function ListaPontosUser({route, navigation}) {
       <View style={styles.containerSwipe}>
         <Animated.Text
           style={[styles.textSwipe, {transform: [{scale: scale}]}]}>
-          Apagar
+          {translations.apagar}
         </Animated.Text>
       </View>
     );
   }
 
   function alertDelete(item) {
-    Alert.alert('Info', 'Quer apagar?', [
+    Alert.alert(translations.info, translations.confirmacao_apagar_prob, [
       {
-        text: 'Nao',
+        text: translations.nao,
         onPress: () => console.log('Cancelado'),
         style: 'cancel',
       },
       {
-        text: 'Sim',
+        text: translations.sim,
         onPress: () => {
           const requestOptions = {
             method: 'POST',
@@ -79,12 +82,12 @@ function ListaPontosUser({route, navigation}) {
             .then((response) => response.json())
             .then((data) => {
               if (data.status === true) {
-                Alert.alert('Problema Apagado!');
+                Alert.alert(translations.problemaApagado);
                 navigation.dispatch(
                   StackActions.replace('ListaPontosUser', {id: id}),
                 );
               } else {
-                Alert.alert('Erro ao apagar! ' + data.MSG);
+                Alert.alert(translations.deleteProblemErro + data.MSG);
               }
             });
         },
@@ -119,12 +122,12 @@ function ListaPontosUser({route, navigation}) {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === true) {
-          Alert.alert('Estado Alterado!');
+          Alert.alert(translations.estadoAlterado);
           navigation.dispatch(
             StackActions.replace('ListaPontosUser', {id: id}),
           );
         } else {
-          Alert.alert('Erro ao editar estado! ' + data.msg);
+          Alert.alert(translations.alterarEstadoErro + data.msg);
         }
       });
   }
@@ -177,8 +180,15 @@ function ListaPontosUser({route, navigation}) {
       <View style={styles.containerBtns}>
         <TouchableOpacity
           style={styles.btn}
-          onPress={() => navigation.dispatch(StackActions.replace('Mapa'))}>
-          <Text style={styles.text}>Voltar</Text>
+          onPress={() =>
+            navigation.dispatch(
+              StackActions.replace('StackMapa', {
+                screen: 'Mapa',
+                params: {id: id},
+              }),
+            )
+          }>
+          <Text style={styles.text}>{translations.voltar}</Text>
         </TouchableOpacity>
       </View>
     </View>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {
   Text,
   View,
@@ -11,6 +11,7 @@ import {
   Dimensions,
 } from 'react-native';
 import {StackActions} from '@react-navigation/native';
+import {LocalizationContext} from './../services/localization/LocalizationContext';
 
 import ImagePicker from 'react-native-image-crop-picker';
 
@@ -21,6 +22,7 @@ function AddProblema({route, navigation}) {
   const {id, lat, long} = route.params;
 
   const [dimensions, setDimensions] = useState({window, screen});
+  const {translations} = useContext(LocalizationContext);
 
   const [titulo, setTitulo] = useState('');
   const [descricao, setDescricao] = useState('');
@@ -41,7 +43,7 @@ function AddProblema({route, navigation}) {
 
   function addProblem() {
     if (titulo.trim() === '' || descricao.trim() === '' || img === '') {
-      Alert.alert('Preencha todos os campos!');
+      Alert.alert(translations.preencher);
     } else {
       addProbWS();
     }
@@ -93,10 +95,15 @@ function AddProblema({route, navigation}) {
       .then((data) => {
         setMsg(data.MSG);
         if (data.status === true) {
-          Alert.alert('Problema Adicionado!');
-          navigation.dispatch(StackActions.replace('Mapa', {id: data.id}));
+          Alert.alert(translations.problemaAdicionado);
+          navigation.dispatch(
+            StackActions.replace('StackMapa', {
+              screen: 'Mapa',
+              params: {id: id},
+            }),
+          );
         } else {
-          Alert.alert('Erro ao adicionar! ' + data.MSG);
+          Alert.alert(translations.addProblemErro + data.MSG);
         }
       });
   }
@@ -104,13 +111,13 @@ function AddProblema({route, navigation}) {
   return (
     <View style={styles.MainContainer}>
       <TextInput
-        placeholder="Titulo"
+        placeholder={translations.titulo}
         style={styles.TextInputStyleTitulo}
         underlineColorAndroid="transparent"
         onChangeText={(text) => setTitulo(text)}
       />
       <TextInput
-        placeholder="Descricao"
+        placeholder={translations.descricao}
         style={
           dimensions.window.height > dimensions.window.width
             ? styles.TextInputStyleDesc
@@ -146,14 +153,14 @@ function AddProblema({route, navigation}) {
             activeOpacity={0.7}
             style={styles.button}
             onPress={pickPhoto}>
-            <Text style={styles.text}>Tirar Foto</Text>
+            <Text style={styles.text}>{translations.tirarFoto}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             activeOpacity={0.7}
             style={styles.button}
             onPress={addProblem}>
-            <Text style={styles.text}>Adicionar problema</Text>
+            <Text style={styles.text}>{translations.adicionarProblema}</Text>
           </TouchableOpacity>
         </View>
       </View>
