@@ -18,6 +18,32 @@ import ImagePicker from 'react-native-image-crop-picker';
 const window = Dimensions.get('window');
 const screen = Dimensions.get('screen');
 
+function decrypt(text) {
+  const crypto = require('./../services/encriptacao/crypto');
+  const ENCRYPTION_KEY = 'cece3a7dc9cf86aae926fd2ee520a06e'; // Must be 256 bits (32 characters)
+  const IV_LENGTH = 'cece3a7dc9cf86aa'; // For AES, this is always 16
+  let decipher = crypto.createDecipheriv(
+    'aes-256-cbc',
+    ENCRYPTION_KEY,
+    IV_LENGTH,
+  );
+  let decrypted = decipher.update(text, 'base64', 'utf8');
+  decrypted += decipher.final('utf8');
+
+  return decrypted;
+}
+
+function encrypt(text) {
+  const crypto = require('./../services/encriptacao/crypto');
+  const ENCRYPTION_KEY = 'cece3a7dc9cf86aae926fd2ee520a06e'; // Must be 256 bits (32 characters)
+  const IV_LENGTH = 'cece3a7dc9cf86aa'; // For AES, this is always 16
+  let cipher = crypto.createCipheriv('aes-256-cbc', ENCRYPTION_KEY, IV_LENGTH);
+  let encrypted = cipher.update(text, 'utf8', 'base64');
+  encrypted += cipher.final('base64');
+
+  return encrypted;
+}
+
 function AddProblema({route, navigation}) {
   const {id, lat, long} = route.params;
 
@@ -77,14 +103,14 @@ function AddProblema({route, navigation}) {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        titulo: titulo,
-        descricao: descricao,
-        imagem: imgEnviar,
-        latitude: lat,
-        longitude: long,
-        estado: estado,
-        data: date,
-        id_utilizador: id,
+        titulo: encrypt(titulo),
+        descricao: encrypt(descricao),
+        imagem: encrypt(imgEnviar),
+        latitude: encrypt(JSON.stringify(lat)),
+        longitude: encrypt(JSON.stringify(long)),
+        estado: encrypt(estado),
+        data: encrypt(date),
+        id_utilizador: encrypt(id),
       }),
     };
     fetch(
@@ -93,8 +119,8 @@ function AddProblema({route, navigation}) {
     )
       .then((response) => response.json())
       .then((data) => {
-        setMsg(data.MSG);
-        if (data.status === true) {
+        setMsg(decrypt(data.MSG));
+        if (decrypt(data.status) == 'true') {
           Alert.alert(translations.problemaAdicionado);
           navigation.dispatch(
             StackActions.replace('StackMapa', {
@@ -103,7 +129,7 @@ function AddProblema({route, navigation}) {
             }),
           );
         } else {
-          Alert.alert(translations.addProblemErro + data.MSG);
+          Alert.alert(translations.addProblemErro + decrypt(data.MSG));
         }
       });
   }

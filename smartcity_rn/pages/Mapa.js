@@ -21,6 +21,21 @@ import {map, filter} from 'rxjs/operators';
 let markersURL =
   'https://pedroacm.000webhostapp.com/cm/cm/index.php/api/problemas';
 
+function decrypt(text) {
+  const crypto = require('./../services/encriptacao/crypto');
+  const ENCRYPTION_KEY = 'cece3a7dc9cf86aae926fd2ee520a06e'; // Must be 256 bits (32 characters)
+  const IV_LENGTH = 'cece3a7dc9cf86aa'; // For AES, this is always 16
+  let decipher = crypto.createDecipheriv(
+    'aes-256-cbc',
+    ENCRYPTION_KEY,
+    IV_LENGTH,
+  );
+  let decrypted = decipher.update(text, 'base64', 'utf8');
+  decrypted += decipher.final('utf8');
+
+  return decrypted;
+}
+
 function Mapa({route, navigation}) {
   const {id} = route.params;
 
@@ -115,12 +130,12 @@ function Mapa({route, navigation}) {
         region={initialPosition}>
         {data.map((marker) => (
           <Marker
-            key={marker.id} //Trocar a key ao trocar a cor senão a cir nao muda!
+            key={decrypt(marker.id)} //Trocar a key ao trocar a cor senão a cir nao muda!
             coordinate={{
-              latitude: parseFloat(marker.latitude),
-              longitude: parseFloat(marker.longitude),
+              latitude: parseFloat(decrypt(marker.latitude)),
+              longitude: parseFloat(decrypt(marker.longitude)),
             }}
-            pinColor={marker.estado == 'Ativo' ? 'red' : 'green'}>
+            pinColor={decrypt(marker.estado) == 'Ativo' ? 'red' : 'green'}>
             <Callout
               style={{
                 alignItems: 'center',
@@ -128,7 +143,7 @@ function Mapa({route, navigation}) {
                 height: 150,
                 width: 100,
               }}>
-              <Text>{marker.titulo}</Text>
+              <Text>{decrypt(marker.titulo)}</Text>
               <Text>
                 <Image
                   style={{
@@ -138,7 +153,7 @@ function Mapa({route, navigation}) {
                     backgroundColor: 'red',
                   }}
                   source={{
-                    uri: marker.imagem,
+                    uri: decrypt(marker.imagem),
                   }}
                 />
               </Text>

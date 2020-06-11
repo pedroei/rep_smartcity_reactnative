@@ -25,6 +25,32 @@ const screen = Dimensions.get('screen');
 
 const {width: WIDTH} = Dimensions.get('window');
 
+function decrypt(text) {
+  const crypto = require('./../services/encriptacao/crypto');
+  const ENCRYPTION_KEY = 'cece3a7dc9cf86aae926fd2ee520a06e'; // Must be 256 bits (32 characters)
+  const IV_LENGTH = 'cece3a7dc9cf86aa'; // For AES, this is always 16
+  let decipher = crypto.createDecipheriv(
+    'aes-256-cbc',
+    ENCRYPTION_KEY,
+    IV_LENGTH,
+  );
+  let decrypted = decipher.update(text, 'base64', 'utf8');
+  decrypted += decipher.final('utf8');
+
+  return decrypted;
+}
+
+function encrypt(text) {
+  const crypto = require('./../services/encriptacao/crypto');
+  const ENCRYPTION_KEY = 'cece3a7dc9cf86aae926fd2ee520a06e'; // Must be 256 bits (32 characters)
+  const IV_LENGTH = 'cece3a7dc9cf86aa'; // For AES, this is always 16
+  let cipher = crypto.createCipheriv('aes-256-cbc', ENCRYPTION_KEY, IV_LENGTH);
+  let encrypted = cipher.update(text, 'utf8', 'base64');
+  encrypted += cipher.final('base64');
+
+  return encrypted;
+}
+
 function Login({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -60,7 +86,10 @@ function Login({navigation}) {
     const requestOptions = {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({email: email, password: password}),
+      body: JSON.stringify({
+        email: encrypt(email),
+        password: encrypt(password),
+      }),
     };
     fetch(
       'https://pedroacm.000webhostapp.com/cm/cm/index.php/api/login',
@@ -68,18 +97,18 @@ function Login({navigation}) {
     )
       .then((response) => response.json())
       .then((data) => {
-        setMsg(data.msg);
-        setIdUser(data.id);
-        if (data.msg === 'success') {
-          Alert.alert('Login!' + ' ' + data.id);
+        setMsg(decrypt(data.msg));
+        setIdUser(decrypt(data.id));
+        if (decrypt(data.msg) === 'success') {
+          Alert.alert('Login!' + ' ' + decrypt(data.id));
           navigation.dispatch(
             StackActions.replace('StackMapa', {
               screen: 'Mapa',
-              params: {id: data.id},
+              params: {id: decrypt(data.id)},
             }),
           );
         } else {
-          Alert.alert(translations.errados + ' ' + data.id);
+          Alert.alert(translations.errados + ' ' + decrypt(data.id));
         }
       });
   }

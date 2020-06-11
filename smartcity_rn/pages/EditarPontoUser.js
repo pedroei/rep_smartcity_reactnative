@@ -23,15 +23,41 @@ import {LocalizationContext} from './../services/localization/LocalizationContex
 const window = Dimensions.get('window');
 const screen = Dimensions.get('screen');
 
+function decrypt(text) {
+  const crypto = require('./../services/encriptacao/crypto');
+  const ENCRYPTION_KEY = 'cece3a7dc9cf86aae926fd2ee520a06e'; // Must be 256 bits (32 characters)
+  const IV_LENGTH = 'cece3a7dc9cf86aa'; // For AES, this is always 16
+  let decipher = crypto.createDecipheriv(
+    'aes-256-cbc',
+    ENCRYPTION_KEY,
+    IV_LENGTH,
+  );
+  let decrypted = decipher.update(text, 'base64', 'utf8');
+  decrypted += decipher.final('utf8');
+
+  return decrypted;
+}
+
+function encrypt(text) {
+  const crypto = require('./../services/encriptacao/crypto');
+  const ENCRYPTION_KEY = 'cece3a7dc9cf86aae926fd2ee520a06e'; // Must be 256 bits (32 characters)
+  const IV_LENGTH = 'cece3a7dc9cf86aa'; // For AES, this is always 16
+  let cipher = crypto.createCipheriv('aes-256-cbc', ENCRYPTION_KEY, IV_LENGTH);
+  let encrypted = cipher.update(text, 'utf8', 'base64');
+  encrypted += cipher.final('base64');
+
+  return encrypted;
+}
+
 function EditarPontoUser({route, navigation}) {
   const {translations} = useContext(LocalizationContext);
   const [dimensions, setDimensions] = useState({window, screen});
 
   const {id, id_utilizador, titulo, descricao, estado} = route.params;
 
-  const [titulo1, setTitulo1] = useState(titulo);
-  const [descricao1, setDescricao1] = useState(descricao);
-  const [estado1, setEstado1] = useState(estado);
+  const [titulo1, setTitulo1] = useState(decrypt(titulo));
+  const [descricao1, setDescricao1] = useState(decrypt(descricao));
+  const [estado1, setEstado1] = useState(decrypt(estado));
 
   const onChange = ({window, screen}) => {
     setDimensions({window, screen});
@@ -59,9 +85,9 @@ function EditarPontoUser({route, navigation}) {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        id: id,
-        titulo: titulo1,
-        descricao: descricao1,
+        id: encrypt(decrypt(id)),
+        titulo: encrypt(titulo1),
+        descricao: encrypt(descricao1),
       }),
     };
     fetch(
@@ -70,13 +96,15 @@ function EditarPontoUser({route, navigation}) {
     )
       .then((response) => response.json())
       .then((data) => {
-        if (data.status === true) {
+        if (decrypt(data.status) == 'true') {
           Alert.alert(translations.editProblema);
           navigation.dispatch(
-            StackActions.replace('ListaPontosUser', {id: id_utilizador}),
+            StackActions.replace('ListaPontosUser', {
+              id: decrypt(id_utilizador),
+            }),
           );
         } else {
-          Alert.alert(translations.editProblemaErro + data.msg);
+          Alert.alert(translations.editProblemaErro + decrypt(data.msg));
         }
       });
   }

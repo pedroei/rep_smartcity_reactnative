@@ -16,6 +16,32 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 import {StackActions} from '@react-navigation/native';
 import {LocalizationContext} from './../services/localization/LocalizationContext';
 
+function decrypt(text) {
+  const crypto = require('./../services/encriptacao/crypto');
+  const ENCRYPTION_KEY = 'cece3a7dc9cf86aae926fd2ee520a06e'; // Must be 256 bits (32 characters)
+  const IV_LENGTH = 'cece3a7dc9cf86aa'; // For AES, this is always 16
+  let decipher = crypto.createDecipheriv(
+    'aes-256-cbc',
+    ENCRYPTION_KEY,
+    IV_LENGTH,
+  );
+  let decrypted = decipher.update(text, 'base64', 'utf8');
+  decrypted += decipher.final('utf8');
+
+  return decrypted;
+}
+
+function encrypt(text) {
+  const crypto = require('./../services/encriptacao/crypto');
+  const ENCRYPTION_KEY = 'cece3a7dc9cf86aae926fd2ee520a06e'; // Must be 256 bits (32 characters)
+  const IV_LENGTH = 'cece3a7dc9cf86aa'; // For AES, this is always 16
+  let cipher = crypto.createCipheriv('aes-256-cbc', ENCRYPTION_KEY, IV_LENGTH);
+  let encrypted = cipher.update(text, 'utf8', 'base64');
+  encrypted += cipher.final('base64');
+
+  return encrypted;
+}
+
 function ListaPontosUser({route, navigation}) {
   const {id} = route.params;
   const [isLoading, setLoading] = useState(true);
@@ -28,7 +54,7 @@ function ListaPontosUser({route, navigation}) {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        id_utilizador: id,
+        id_utilizador: encrypt(id),
       }),
     };
     fetch(
@@ -72,7 +98,7 @@ function ListaPontosUser({route, navigation}) {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-              id: item.id,
+              id: encrypt(decrypt(item.id)),
             }),
           };
           fetch(
@@ -81,13 +107,13 @@ function ListaPontosUser({route, navigation}) {
           )
             .then((response) => response.json())
             .then((data) => {
-              if (data.status === true) {
+              if (decrypt(data.status) == 'true') {
                 Alert.alert(translations.problemaApagado);
                 navigation.dispatch(
                   StackActions.replace('ListaPontosUser', {id: id}),
                 );
               } else {
-                Alert.alert(translations.deleteProblemErro + data.MSG);
+                Alert.alert(translations.deleteProblemErro + decrypt(data.MSG));
               }
             });
         },
@@ -101,7 +127,7 @@ function ListaPontosUser({route, navigation}) {
 
   function alterarEstado(item) {
     let novoEstado;
-    if (item.estado == 'Ativo') {
+    if (decrypt(item.estado) == 'Ativo') {
       novoEstado = 'Resolvido';
     } else {
       novoEstado = 'Ativo';
@@ -111,8 +137,8 @@ function ListaPontosUser({route, navigation}) {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        id: item.id,
-        estado: novoEstado,
+        id: encrypt(decrypt(item.id)),
+        estado: encrypt(novoEstado),
       }),
     };
     fetch(
@@ -121,13 +147,13 @@ function ListaPontosUser({route, navigation}) {
     )
       .then((response) => response.json())
       .then((data) => {
-        if (data.status === true) {
+        if (decrypt(data.status) == 'true') {
           Alert.alert(translations.estadoAlterado);
           navigation.dispatch(
             StackActions.replace('ListaPontosUser', {id: id}),
           );
         } else {
-          Alert.alert(translations.alterarEstadoErro + data.msg);
+          Alert.alert(translations.alterarEstadoErro + decrypt(data.msg));
         }
       });
   }
@@ -157,19 +183,19 @@ function ListaPontosUser({route, navigation}) {
                 <View style={{backgroundColor: 'white', padding: 23}}>
                   {/*<Text>Id: {item.id}</Text>*/}
                   <Text style={{fontSize: 20, fontWeight: 'bold'}}>
-                    {item.titulo}{' '}
+                    {decrypt(item.titulo)}{' '}
                   </Text>
                   <Text numberOfLines={1} style={{fontSize: 17}}>
-                    {item.descricao}
+                    {decrypt(item.descricao)}
                   </Text>
                   <Text
                     style={
-                      item.estado == 'Ativo'
+                      decrypt(item.estado) == 'Ativo'
                         ? styles.txtEstadoAtivo
                         : styles.txtEstadoResolvido
                     }
                     onPress={() => alterarEstado(item)}>
-                    {item.estado}
+                    {decrypt(item.estado)}
                   </Text>
                 </View>
               </TouchableWithoutFeedback>
